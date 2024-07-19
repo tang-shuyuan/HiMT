@@ -1,5 +1,5 @@
 # EeayMT
-A toolkit for assembling mitochondrial genome using hifi
+EasyMT is a plant mitochondrial genome assembly toolkit written in Python3. It can extract high-depth reads from HiFi sequencing data and use Flye to assemble the mitochondria and chloroplasts of plants.
 # installation
 ```
 conda install -c bioconda easymt
@@ -34,5 +34,5 @@ Options arguments:
 ```
 example
 ```
-easymt -i in.fasta -o output -t 12
+easymt -i hifi_data.fasta -o output -t 12
 ```
