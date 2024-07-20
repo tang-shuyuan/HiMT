@@ -1,4 +1,4 @@
 git is a dirtributed version control system.
 git is free sortware
 git has a mutable index called stage
-git tracks changes.
+git tracks changes of files.
