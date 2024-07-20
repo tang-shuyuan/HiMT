@@ -7,7 +7,9 @@ conda install -c bioconda easymt
 ```
 ## docker image
 ```
-stay tuned
+docker pull dacongmian/easymt:1.0.0
+docker run -it dacongmian/easymt:1.0.0
+conda activate easymt
 ```
 Usage
 ```
