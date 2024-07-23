@@ -13,7 +13,7 @@ conda init
 source .bashrc
 conda activate easymt
 ```
-Usage
+# Usage
 ```
 options:
   -h, --help            show this help message and exit
@@ -41,7 +41,14 @@ Options arguments:
   -s {plant,animal}, --species {plant,animal}
                         default=plant,Species category,only can be plant or animal
 ```
-example
+## example
+## Assembly of plant mitogenomes
+## fast modle
+Randomly select a part of all reads and then extract high depth reads
+```
+easymt -i hifi_data.fasta -o output -t 12 -p 0.2
+```
+## general model
 ```
 conda create -n env_name easymt
 conda activate env_name
