@@ -9,6 +9,8 @@ conda install -c bioconda easymt
 ```
 docker pull dacongmian/easymt:1.0.0
 docker run -it dacongmian/easymt:1.0.0
+conda init
+source .bashrc
 conda activate easymt
 ```
 Usage
