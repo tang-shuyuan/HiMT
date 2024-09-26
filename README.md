@@ -1,9 +1,9 @@
-# EeayMT
-EasyMT is a plant mitochondrial genome assembly toolkit written in Python3. It can extract high-depth reads from HiFi sequencing data and use Flye to assemble the mitochondria genome and chloroplasts genome of plants.
+# HiMT
+HiMT is a plant mitochondrial genome assembly toolkit written in Python3. It can extract high-depth reads from HiFi sequencing data and use Flye to assemble the mitochondria genome and chloroplasts genome of plants.
 # installation
 ## conda(recommended)
 ```
-conda install -c bioconda easymt
+conda install -c bioconda HiMT
 ```
 ## docker image
 ```
