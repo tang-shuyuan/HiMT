@@ -3,15 +3,7 @@ HiMT is a plant mitochondrial genome assembly toolkit written in Python3. It can
 # installation
 ## conda(recommended)
 ```
-conda install -c bioconda HiMT
-```
-## docker image
-```
-docker pull dacongmian/easymt:1.0.0
-docker run -it dacongmian/easymt:1.0.0
-conda init
-source .bashrc
-conda activate easymt
+conda install shuyuan_tang::himt -c bioconda
 ```
 # Usage
 ```
@@ -43,16 +35,12 @@ Options arguments:
 ```
 
 ## Assembly of plant mitogenomes
-## fast modle
-Randomly select a part of all reads and then extract high depth reads
 ```
-easymt -i hifi_data.fasta -o output -t 12 -p 0.2
+## general usage
 ```
-## general model
-```
-easymt -i hifi_data.fasta -o output -t 12
+himt assemble -i pineapple.LY.fa -o output -t 10
 ```
 ## Assembly of animal mitogenomes(Not mature)
 ```
-easymt -i hifi_data.fasta -o output -t 12 -s animal
+himt assemble -i input.fa -o output -t 10 -s plant
 ```
