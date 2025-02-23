@@ -48,7 +48,7 @@ options:
 ```
 
 ## Assembly of plant mitogenomes
-```
+
 ## general usage
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
