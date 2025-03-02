@@ -1,7 +1,10 @@
 # HiMT
 HiMT is a plant mitochondrial genome assembly toolkit written in Python3. It can extract high-depth reads from HiFi sequencing data and use Flye to assemble the mitochondria genome and chloroplasts genome of plants.
-# installation
+# installation under Linux
 ## conda(recommended)
+# Installation under Windows
+git clone 
+# Installation under Macos
 ```
 conda install shuyuan_tang::himt -c bioconda
 ```
