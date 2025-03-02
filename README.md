@@ -3,7 +3,10 @@ HiMT is a plant mitochondrial genome assembly toolkit written in Python3. It can
 # installation under Linux
 ## conda(recommended)
 # Installation under Windows
-git clone 
+```
+git clone https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/himt_windows.tar.gz
+tar -xzvf himt_windows.tar.gz
+```
 # Installation under Macos
 ```
 conda install shuyuan_tang::himt -c bioconda
