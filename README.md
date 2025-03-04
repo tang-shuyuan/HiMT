@@ -58,10 +58,7 @@ Optional arguments:
 
 ### Example
 Download test data
-click the link [demo download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) or
-```
-wget -c https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
-```
+click the link [demo download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) 
 
 run himt to assemble organelle genomes
 ```
