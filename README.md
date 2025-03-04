@@ -28,6 +28,16 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
+## Dependence
+```
+    - python >=3.10
+    - blast >=2.14.0
+    - flye >=2.9.4
+    - miniprot >=0.13
+    - plotly >=5.24.0
+    - numpy >=1.26.0
+
+```
 # Quickly start
 #### Introduction
 HiMT includes four subprograms
