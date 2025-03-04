@@ -10,13 +10,12 @@ conda install shuyuan_tang::himt -c bioconda
 
 click the link [HiMT download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/himt_windows.tar.gz)
 
-# Installation under Macos(to be updata)
-```
+# quick start
 
-```
-# Usage
+## assemble
 ```
 usage: himt assemble [argument]
+please use 'himt assemble -h or --help' to show help information
 
 Assembling mitochondrail genome with HiFi sequcncing data
 
@@ -26,8 +25,8 @@ Required arguments:
   -o OUTPUT_DIR, --output_dir OUTPUT_DIR
                         output directory.
 
-options:
-  -h, --help            show this help message and exit
+Optional arguments:
+  -h, --help            Show this help message and exit
   -n HEAD_NUMBER, --head_number HEAD_NUMBER
                         default=4,The number of kmer species randomly selected.
   -t THREAD, --thread THREAD
@@ -35,7 +34,8 @@ options:
   -b {3,4}, --base_number {3,4}
                         default=3,only can be 3 and 4,The number of bases at the beginning of kmer.
   -fd FILTER_DEPTH, --filter_depth FILTER_DEPTH
-                        read depths below this value will be filtered.
+                        read depths below this value will be filtered. You must input the -p parameter to enable the
+                        use of the -fd parameter
   -fp FILTER_PERCENTAGE, --filter_percentage FILTER_PERCENTAGE
                         default=0.3,The depth of the mitochondrial genome obtained by blast, the proportion adjusted
                         downwards on this value.
@@ -52,17 +52,17 @@ options:
   -x NORMALIZE_DEPTH, --normalize_depth NORMALIZE_DEPTH
                         Normalize the mitochondrial genome depth to a value.If the input value exceeds the
                         mitochondrial genome depth, retain the maximum mitochondrial genome depth,the default
-                        mitochondrial genome depth ranges between 15 and 50, input a value less than 0 (such as:-1) to
-                        retain the maximum mitogenome depth.
+                        mitochondrial genome depth ranges between 15 and 50. input a value less than 0 (such as:-1) to
+                        retain the maximum mitogenome depth
 ```
 
 ## Assembly of plant mitogenomes
 
-## general usage
+## run himt to assemble organelle genomes
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
 ```
 ## Assembly of animal mitogenomes
 ```
-himt assemble -i input.fa -o output -t 10 -s plant
+himt assemble -i input.fa -o output -t 10 -s animal
 ```
