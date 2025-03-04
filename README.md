@@ -168,6 +168,7 @@ Optional arguments:
   -h, --help            Show this help message and exit
 ```
 examples
+Supports Fasta and GFA files
 ```
 himt compare -q genome1。fa/gfa -r genome2.fa/gfa -o output
 ```
