@@ -5,6 +5,10 @@
 An Integrative Toolkit for Assembling Plant Mitochondrial Genomes Using HiFi Reads 
 
 HiMT is a rapid plastid genome assembly tool for HiFi data, which can be used for the assembly of plant mitochondrial, chloroplast, and animal mitochondrial genomes. It supports usage on Linux, Windows, and macOS, and can be used through both command line and GUI.
+
+Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)
+Find detailed documentation at https://www.yuque.com/yanyew/gc786d
+For any question about SynGAP, please contact 360875601w@gmail.com
 ## Installation under Linux
 conda (recommended)
 ```
