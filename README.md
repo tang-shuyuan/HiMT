@@ -118,13 +118,13 @@ wget https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f
 1. run himt to assemble plant organelle genomes(HiMT support fa/fq/fa.gz/fq/gz)
 
 ```
-himt assemble -i pineapple.LY.fa -o output -t 10
+himt assemble -i demo.fa -o output -t 10
 ```
 
 2. If you occasionally notice incomplete mitochondrial genome assemblies with HiMT, you can try the following commands:
 
 ```
-himt assemble -i input.file -o output -fp 0.2 -x 50
+himt assemble -i input_file -o output -fp 0.2 -x 50
 ```
 
 3. To assemble animal mitogenome
