@@ -61,6 +61,7 @@ function:
 ```
 
 ### Assemble
+Run the command below to assemble mitochondrial and chloroplast genomes simultaneously.
 ```
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
