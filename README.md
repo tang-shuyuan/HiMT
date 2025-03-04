@@ -28,7 +28,7 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
-#### introduction
+#### Introduction
 HiMT includes four subprograms
 ```
 usage: himt [function] [argument]
@@ -103,8 +103,7 @@ wget https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f
 ```
 
 
-
-1. run himt to assemble organelle genomes(HiMT support fa/fq/fa.gz/fq/gz)
+1. run himt to assemble plant organelle genomes(HiMT support fa/fq/fa.gz/fq/gz)
 
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
@@ -113,7 +112,7 @@ himt assemble -i pineapple.LY.fa -o output -t 10
 2. If you occasionally notice incomplete mitochondrial genome assemblies with HiMT, you can try the following commands:
 
 ```
-himt assemble -i input.file -o output -fp 0.2 -x 50 -p 0.5
+himt assemble -i input.file -o output -fp 0.2 -x 50
 ```
 
 3. To assemble animal mitogenome
@@ -125,13 +124,13 @@ himt assemble -i input_file -o output_dir -s animal
 #### Main output files
 | file | description |
 | --- | --- |
-| extract.fa | 过滤好的高深度的数据，直接用于线粒体基因组的组装 |
-| himt_mitochondrial.gfa | 线粒体基因组结果文件 |
-| himt_assessment.html | 线粒体基因组组装结果评估报告 |
-| himt_chloroplast.gfa | 叶绿体基因组结果文件 |
-| himt_chloroplast.html | 叶绿体基因组组装结果评估报告 |
-| chloroplast_hap1.fa | 叶绿体单倍型1 |
-| chloroplast_hap2.fa | 叶绿体单倍型2 |
+| extract.fa |The filtered high-depth data can be directly used for mitochondrial genome assembly. |
+| himt_mitochondrial.gfa | Mitochondrial genome result file |
+| himt_mitochondrial.html | Evaluation of mitochondrial genome assembly results |
+| himt_chloroplast.gfa | Chloroplast genome result file |
+| himt_chloroplast.html | Evaluation of chloroplast genome assembly results |
+| chloroplast_hap1.fa | Chloroplast haplotype 1 |
+| chloroplast_hap2.fa | Chloroplast haplotype 2 |
 
 
 ### filter 
@@ -236,7 +235,7 @@ Optional arguments:
 #### Examples
 
 
-```plain
+```
 himt compare -q genome1。fa/gfa -r genome2.fa/gfa -o output
 ```
 
