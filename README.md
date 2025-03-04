@@ -178,7 +178,7 @@ Optional arguments:
 
 #### Examples
 ```
-himt assemble -i pineapple.LY.fa -o output -t 10
+himt filter -i input_file -o output -t 10
 ```
 
 ### assess
@@ -203,7 +203,7 @@ Required arguments:
 ```
 
 #### Examples
-支持fasta文件和gfa文件
+Support fasta format and gfa format
 
 ```
 himt assess -i input.fa/gfa -o assess_output
@@ -234,8 +234,8 @@ Optional arguments:
 
 #### Examples
 
-
+Support fasta format and gfa format
 ```
-himt compare -q genome1。fa/gfa -r genome2.fa/gfa -o output
+himt compare -q genome1.fa/gfa -r genome2.fa/gfa -o output
 ```
 
