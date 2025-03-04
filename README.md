@@ -113,3 +113,62 @@ Optional arguments:
                         depth, retain the maximum mitochondrial genome depth,the default mitochondrial genome depth ranges between 15
                         and 50. input a value less than 0 (such as:-1) to retain the maximum mitogenome depth
 ```
+### examples
+```
+himt assemble -i demo.fa -o output -t 10
+```
+
+## assess
+If you have an assembled plant mitochondrial genome, you wish to evaluate the quality of the assembly
+```
+usage: himt assess [argument]
+please use 'himt assess -h or --help' to show help information
+
+Assessing the assembly quality of the mitochondrial genome
+
+options:
+  -h, --help            show this help message and exit
+  -c {mitochondrial,chloroplast}, --category {mitochondrial,chloroplast}
+                        default=mitochondrial,Choose the category of organelles you want to assess.
+
+Required arguments:
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        input a fasta or gfa file.
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory.
+```
+### examples
+to assess mitogenome
+ ```
+himt assess -i input.fa/gfa -o output -c mitochondrial
+```
+to assess ptgenome
+```
+himt assess -i chloroplast
+```
+
+## Compare
+```
+usage: himt compare [argument]
+please use 'himt compare -h or --help' to show help information
+
+compare the collinearity between two genomes based on alignment results from minimap2
+
+Required arguments:
+  -r REFERENCE, --reference REFERENCE
+                        input reference genome
+  -q QUERY, --query QUERY
+                        input query genome
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory
+
+Optional arguments:
+  -c {mitochondrial,chloroplast,other}, --category {mitochondrial,chloroplast,other}
+                        default=mitochondrial,choose the category of genome you want to compare
+  -h, --help            Show this help message and exit
+```
+examples
+```
+himt compare -q genome1 -r genome2 -o output
+```
+
