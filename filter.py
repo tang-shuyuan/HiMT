@@ -433,7 +433,7 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
 
         ####add data
         if min_reads_depth < 40 and auto_proportion != 1:
-            ###如果估计的线粒体基因组深度总共不超过120，则直接全部tbalstn
+            ###if depth not exceed 120，tbalstn all
             if estimate_mitogenome_depth< 120 :
                 proportion_file=process_file
                 min_reads_depth=determining_mitogenome_depth(args.species, config_path,args.thread,proportion_file, blast_output)
