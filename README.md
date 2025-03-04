@@ -152,7 +152,7 @@ only filter data but not assemble organelle genome
 usage: himt filter [argument]
 please use 'himt filter -h or --help' to show help information
 
-Filtering the low-depth nuclear genome reads
+Filter low-depth nuclear genome sequencing reads
 
 Required arguments:
   -i INPUT_FILE, --input_file INPUT_FILE
@@ -200,7 +200,7 @@ If you have an assembled plant mitochondrial genome and wish to evaluate the ass
 usage: himt assess [argument]
 please use 'himt assess -h or --help' to show help information
 
-Assessing the assembly quality of the mitochondrial genome
+Assess the assembly quality of the mitochondrial genome
 
 options:
   -h, --help            show this help message and exit
@@ -228,8 +228,7 @@ himt assess -i input.fa/gfa -o assess_output
 usage: himt compare [argument]
 please use 'himt compare -h or --help' to show help information
 
-compare the collinearity between two genomes based on alignment results from minimap2
-
+Visualize the collinearity between two genomes
 Required arguments:
   -r REFERENCE, --reference REFERENCE
                         input reference genome
