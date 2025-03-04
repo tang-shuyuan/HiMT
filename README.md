@@ -12,7 +12,7 @@ click the link [HiMT download](https://github.com/tang-shuyuan/HiMT/releases/dow
 
 # quick start
 
-## assemble
+## Assemble
 ```
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
@@ -56,24 +56,24 @@ Optional arguments:
                         retain the maximum mitogenome depth
 ```
 
-## Example
+### Example
 Download test data
 click the link [demo download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) or
 ```
 wget -c https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
 ```
 
-## run himt to assemble organelle genomes
+run himt to assemble organelle genomes
 ```
 himt assemble -i demo.fa -o output -t 10
 ```
 
-## To assemble animal mitogenome
+To assemble animal mitogenome
 ```
 himt assemble -i input.fa -o output -t 10 -s animal
 ```
 
-## filter 
+## Filter 
 only filter data but not assemble organelle genome
 ```
 usage: himt filter [argument]
@@ -118,7 +118,7 @@ Optional arguments:
 himt assemble -i demo.fa -o output -t 10
 ```
 
-## assess
+## Assess
 If you have an assembled plant mitochondrial genome, you wish to evaluate the quality of the assembly
 ```
 usage: himt assess [argument]
