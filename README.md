@@ -1,1 +1,216 @@
-![image](https://github.com/user-attachments/assets/15f42636-e6b0-48f5-b475-8894e7047cf2)
+分为4个板块，组装、仅过滤数据、评估线粒体组装质量以及比较组装结果
+
+```plain
+usage: himt [function] [argument]
+
+a toolkit for assembling mitochondrial genome
+version 1.0.7
+for any questions, please put them forward on https://github.com/tang-shuyuan/himt or https://bioanno.com.
+
+options:
+  -h, --help     show this help message and exit
+  -v, --version  show program's version number and exit
+
+function:
+
+      assemble      Assemble mitochondrial genome with HiFi data
+      assess        Assess the assembly quality of the mitochondrial genome
+      filter        Filter low-depth nuclear genome sequencing reads
+      compare       Visualize the collinearity between two genomes
+```
+
+### assemble
+```plain
+usage: himt assemble [argument]
+please use 'himt assemble -h or --help' to show help information
+
+Assembling mitochondrail genome with HiFi sequcncing data
+
+Required arguments:
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        input a fasta or fastq file,gz compressed files are supported.
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory.
+
+Optional arguments:
+  -h, --help            Show this help message and exit
+  -n HEAD_NUMBER, --head_number HEAD_NUMBER
+                        default=4,The number of kmer species randomly selected.
+  -t THREAD, --thread THREAD
+                        default=2 The number of thread used during code execution.
+  -b {3,4}, --base_number {3,4}
+                        default=3,only can be 3 and 4,The number of bases at the beginning of kmer.
+  -fd FILTER_DEPTH, --filter_depth FILTER_DEPTH
+                        read depths below this value will be filtered. You must input the -p parameter to enable the
+                        use of the -fd parameter
+  -fp FILTER_PERCENTAGE, --filter_percentage FILTER_PERCENTAGE
+                        default=0.3,The depth of the mitochondrial genome obtained by blast, the proportion adjusted
+                        downwards on this value.
+  -p PROPORTION, --proportion PROPORTION
+                        default=1,The percentage of the selected dataset from the entire file, choose a value from
+                        0-1.
+  -c ACCURACY, --accuracy ACCURACY
+                        default=0.8,If one read has a high-frequency kmer ratio exceeding this value, it will be
+                        considered as a high-frequency read,choose a value from 0-1.
+  -s {plant,animal}, --species {plant,animal}
+                        default=plant,Species category,only can be plant or animal.
+  --no_flye_meta        By default, we use flye Meta pattern to assemble the mitochondrial genome. If you don't want
+                        to use meta pattern, add this parameter.
+  -x NORMALIZE_DEPTH, --normalize_depth NORMALIZE_DEPTH
+                        Normalize the mitochondrial genome depth to a value.If the input value exceeds the
+                        mitochondrial genome depth, retain the maximum mitochondrial genome depth,the default
+                        mitochondrial genome depth ranges between 15 and 50. input a value less than 0 (such as:-1) to
+                        retain the maximum mitogenome depth
+```
+
+#### Examples
+Demo data download、
+
+点击下载[链接](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa)
+
+```plain
+wget https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
+```
+
+
+
+1. run himt to assemble organelle genomes
+
+```plain
+himt assemble -i pineapple.LY.fa -o output -t 10
+```
+
+
+
+2. 如果你发现线粒体基因组组装不完整，可以尝试命令
+
+```plain
+himt assemble -i pineapple.LY.fa -o output -fp 0.2 -x 50 -p 0.5
+```
+
+
+
+3. To assemble animal mitogenome
+
+```plain
+himt assemble -i input_file -o output_dir -s animal
+```
+
+#### 主要的输出文件
+| file | description |
+| --- | --- |
+| extract.fa | 过滤好的高深度的数据，直接用于线粒体基因组的组装 |
+| himt_mitochondrial.gfa | 线粒体基因组结果文件 |
+| himt_assessment.html | 线粒体基因组组装结果评估报告 |
+| himt_chloroplast.gfa | 叶绿体基因组结果文件 |
+| himt_chloroplast.html | 叶绿体基因组组装结果评估报告 |
+| chloroplast_hap1.fa | 叶绿体单倍型1 |
+| chloroplast_hap2.fa | 叶绿体单倍型2 |
+
+
+### filter 
+only filter data but not assemble organelle genome
+
+```plain
+usage: himt filter [argument]
+please use 'himt filter -h or --help' to show help information
+
+Filtering the low-depth nuclear genome reads
+
+Required arguments:
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        input a fasta or fastq file,gz compressed files are supported.
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory.
+
+Optional arguments:
+  -h, --help            Show this help message and exit
+  -n HEAD_NUMBER, --head_number HEAD_NUMBER
+                        default=4,The number of kmer species randomly selected.
+  -t THREAD, --thread THREAD
+                        default=2 The number of thread used during code execution.
+  -b {3,4}, --base_number {3,4}
+                        default=3,only can be 3 and 4,The number of bases at the beginning of kmer.
+  -fd FILTER_DEPTH, --filter_depth FILTER_DEPTH
+                        read depths below this value will be filtered. You must input the -p parameter to enable the
+                        use of the -fd parameter
+  -fp FILTER_PERCENTAGE, --filter_percentage FILTER_PERCENTAGE
+                        default=0.3,The depth of the mitochondrial genome obtained by blast, the proportion adjusted
+                        downwards on this value.
+  -p PROPORTION, --proportion PROPORTION
+                        The percentage of the selected dataset from the entire file, choose a value from 0-1.
+  -c ACCURACY, --accuracy ACCURACY
+                        default=0.8,If one read has a high-frequency kmer ratio exceeding this value, it will be
+                        considered as a high-frequency read,choose a value from 0-1.
+  -s {plant,animal}, --species {plant,animal}
+                        default=plant,Species category,only can be plant or animal.
+  -x NORMALIZE_DEPTH, --normalize_depth NORMALIZE_DEPTH
+                        Normalize the mitochondrial genome depth to a value.If the input value exceeds the
+                        mitochondrial genome depth, retain the maximum mitochondrial genome depth,the default
+                        mitochondrial genome depth ranges between 15 and 50. input a value less than 0 (such as:-1) to
+                        retain the maximum mitogenome depth
+```
+
+#### Examples
+```plain
+himt assemble -i pineapple.LY.fa -o output -t 10
+```
+
+### assess
+如果你有一个组装好的植物线粒体基因组，希望评估一下组装的质量
+
+```plain
+usage: himt assess [argument]
+please use 'himt assess -h or --help' to show help information
+
+Assessing the assembly quality of the mitochondrial genome
+
+options:
+  -h, --help            show this help message and exit
+  -c {mitochondrial,chloroplast}, --category {mitochondrial,chloroplast}
+                        default=mitochondrial,Choose the category of organelles you want to assess.
+
+Required arguments:
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        input a fasta or gfa file.
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory.
+```
+
+#### Examples
+支持fasta文件和gfa文件
+
+```plain
+himt assess -i input.fa/gfa -o assess_output
+```
+
+### compare 
+
+
+```plain
+usage: himt compare [argument]
+please use 'himt compare -h or --help' to show help information
+
+compare the collinearity between two genomes based on alignment results from minimap2
+
+Required arguments:
+  -r REFERENCE, --reference REFERENCE
+                        input reference genome
+  -q QUERY, --query QUERY
+                        input query genome
+  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+                        output directory
+
+Optional arguments:
+  -c {mitochondrial,chloroplast,other}, --category {mitochondrial,chloroplast,other}
+                        default=mitochondrial,choose the category of genome you want to compare
+  -h, --help            Show this help message and exit
+```
+
+#### Examples
+
+
+```plain
+himt compare -q genome1。fa/gfa -r genome2.fa/gfa -o output
+```
+
