@@ -10,7 +10,7 @@ conda install shuyuan_tang::himt -c bioconda
 
 click the link [HiMT download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/himt_windows.tar.gz)
 
-# Installation under Macos
+# Installation under Macos(to be updata)
 ```
 
 ```
@@ -62,7 +62,7 @@ options:
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
 ```
-## Assembly of animal mitogenomes(Not mature)
+## Assembly of animal mitogenomes
 ```
 himt assemble -i input.fa -o output -t 10 -s plant
 ```
