@@ -169,6 +169,6 @@ Optional arguments:
 ```
 examples
 ```
-himt compare -q genome1 -r genome2 -o output
+himt compare -q genome1。fa/gfa -r genome2.fa/gfa -o output
 ```
 
