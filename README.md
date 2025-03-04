@@ -56,8 +56,9 @@ Optional arguments:
                         retain the maximum mitogenome depth
 ```
 
-## Assembly of plant mitogenomes
-
+## Download test data
+```
+```
 ## run himt to assemble organelle genomes
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
