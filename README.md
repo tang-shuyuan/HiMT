@@ -20,14 +20,14 @@ conda install shuyuan_tang::himt -c bioconda
 
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/himt_windows.tar.gz)
 
-## Installation under MacOS
 
+## Installation under MacOS
+conda (recommended)
 ```
 conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
-
 #### introduction
 HiMT includes four subprograms
 ```
