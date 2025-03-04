@@ -49,7 +49,7 @@ function:
       compare       Visualize the collinearity between two genomes
 ```
 
-### assemble
+### Assemble
 ```
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
@@ -133,7 +133,7 @@ himt assemble -i input_file -o output_dir -s animal
 | chloroplast_hap2.fa | Chloroplast haplotype 2 |
 
 
-### filter 
+### Filter 
 only filter data but not assemble organelle genome
 
 ```
@@ -181,7 +181,7 @@ Optional arguments:
 himt filter -i input_file -o output -t 10
 ```
 
-### assess
+### Assess
 If you have an assembled plant mitochondrial genome and wish to evaluate the assembly quality.
 
 ```
@@ -209,7 +209,7 @@ Support fasta format and gfa format
 himt assess -i input.fa/gfa -o assess_output
 ```
 
-### compare 
+### Compare 
 
 
 ```
