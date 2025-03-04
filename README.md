@@ -1,4 +1,5 @@
-# HiMT
+# HiMT![himt_logo](https://github.com/user-attachments/assets/240e7aa3-5ea4-45f4-af66-f29ab79ce732)
+
 HiMT is a rapid plastid genome assembly tool for HiFi data, which can be used for the assembly of plant mitochondrial, chloroplast, and animal mitochondrial genomes. It supports usage on Linux, Windows, and macOS, and can be used through both command line and GUI. 
 # installation under Linux
 ## conda(recommended)
