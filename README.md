@@ -1,7 +1,7 @@
 # HiMT
 HiMT is a rapid plastid genome assembly tool for HiFi data, which can be used for the assembly of plant mitochondrial, chloroplast, and animal mitochondrial genomes. It supports usage on Linux, Windows, and macOS, and can be used through both command line and GUI.
 
-Includes four subprograms
+#### Includes four subprograms
 ```
 usage: himt [function] [argument]
 
@@ -22,7 +22,7 @@ function:
 ```
 
 ### assemble
-```plain
+```
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
 
@@ -66,39 +66,35 @@ Optional arguments:
 ```
 
 #### Examples
-Demo data download、
+Demo data download
 
-点击下载[链接](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa)
+click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa)
 
-```plain
+```
 wget https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
 ```
 
 
 
-1. run himt to assemble organelle genomes
+1. run himt to assemble organelle genomes(HiMT support fa/fq/fa.gz/fq/gz)
 
-```plain
+```
 himt assemble -i pineapple.LY.fa -o output -t 10
 ```
 
+2. If you occasionally notice incomplete mitochondrial genome assemblies with HiMT, you can try the following commands:
 
-
-2. 如果你发现线粒体基因组组装不完整，可以尝试命令
-
-```plain
-himt assemble -i pineapple.LY.fa -o output -fp 0.2 -x 50 -p 0.5
 ```
-
-
+himt assemble -i input.file -o output -fp 0.2 -x 50 -p 0.5
+```
 
 3. To assemble animal mitogenome
 
-```plain
+```
 himt assemble -i input_file -o output_dir -s animal
 ```
 
-#### 主要的输出文件
+#### Main output files
 | file | description |
 | --- | --- |
 | extract.fa | 过滤好的高深度的数据，直接用于线粒体基因组的组装 |
@@ -113,7 +109,7 @@ himt assemble -i input_file -o output_dir -s animal
 ### filter 
 only filter data but not assemble organelle genome
 
-```plain
+```
 usage: himt filter [argument]
 please use 'himt filter -h or --help' to show help information
 
@@ -154,14 +150,14 @@ Optional arguments:
 ```
 
 #### Examples
-```plain
+```
 himt assemble -i pineapple.LY.fa -o output -t 10
 ```
 
 ### assess
-如果你有一个组装好的植物线粒体基因组，希望评估一下组装的质量
+If you have an assembled plant mitochondrial genome and wish to evaluate the assembly quality.
 
-```plain
+```
 usage: himt assess [argument]
 please use 'himt assess -h or --help' to show help information
 
@@ -182,14 +178,14 @@ Required arguments:
 #### Examples
 支持fasta文件和gfa文件
 
-```plain
+```
 himt assess -i input.fa/gfa -o assess_output
 ```
 
 ### compare 
 
 
-```plain
+```
 usage: himt compare [argument]
 please use 'himt compare -h or --help' to show help information
 
