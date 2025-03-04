@@ -57,8 +57,11 @@ Optional arguments:
 ```
 
 ## Download test data
+click the link [demo download](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa)
 ```
+wget -c https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
 ```
+
 ## run himt to assemble organelle genomes
 ```
 himt assemble -i pineapple.LY.fa -o output -t 10
