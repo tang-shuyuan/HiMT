@@ -187,6 +187,3 @@ def compare(args):
         }
     }
     fig.write_html(os.path.join(args.output_dir, "himt_compara.html"), config=config)
-
-
-
