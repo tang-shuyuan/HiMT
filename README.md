@@ -28,6 +28,7 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
+# Quickly start
 #### Introduction
 HiMT includes four subprograms
 ```
