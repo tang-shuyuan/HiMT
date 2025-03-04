@@ -1,5 +1,4 @@
-# HiMT
-![GitHub](https://github.com/user-attachments/assets/7a871cae-dbb6-4b8c-ab43-a36da09c1e82)
+# HiMT ![GitHub](https://github.com/user-attachments/assets/7a871cae-dbb6-4b8c-ab43-a36da09c1e82)
 
 
 An Integrative Toolkit for Assembling Plant Mitochondrial Genomes Using HiFi Reads
