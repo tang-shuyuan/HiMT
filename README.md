@@ -28,7 +28,7 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
-## Dependence
+## Dependencies
 ```
     - python >=3.10
     - blast >=2.14.0
