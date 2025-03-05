@@ -64,7 +64,7 @@ Demo data download
 
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
 ```
-wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz
+wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa
 ```
 
 ### Assemble
