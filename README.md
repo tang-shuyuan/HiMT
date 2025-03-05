@@ -8,7 +8,7 @@ HiMT is a rapid plastid genome assembly tool for HiFi data, which can be used fo
 
 Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)  
 Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#)  
-For any question about SynGAP, please contact 2421496996@qq.com
+For any question about HiMT, please contact 2421496996@qq.com
 ## Installation under Linux
 conda (recommended)
 ```
@@ -39,6 +39,7 @@ conda install shuyuan_tang::himt -c bioconda
 
 ```
 # Quickly start
+
 #### Introduction
 HiMT includes four subprograms
 ```
@@ -59,6 +60,10 @@ function:
       filter        Filter low-depth nuclear genome sequencing reads
       compare       Visualize the collinearity between two genomes
 ```
+Demo data download
+
+click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) 
+
 
 ### Assemble
 Run the command below to assemble mitochondrial and chloroplast genomes simultaneously.
@@ -106,13 +111,6 @@ Optional arguments:
 ```
 
 #### Examples
-Demo data download
-
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) 
-or
-```
-wget https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa
-```
 
 
 1. run himt to assemble plant organelle genomes(HiMT support fa/fq/fa.gz/fq/gz)
