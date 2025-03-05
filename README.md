@@ -18,7 +18,7 @@ conda install shuyuan_tang::himt -c bioconda
 ```
 ## Installation under Windows
 
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) or TBtools Plugin Store
+click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) or visit the TBtools Plugin Store
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
 
 
