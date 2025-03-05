@@ -18,7 +18,7 @@ conda install shuyuan_tang::himt -c bioconda
 ```
 ## Installation under Windows
 
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/himt_windows.tar.gz)
+click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz)
 
 
 ## Installation under MacOS
@@ -62,8 +62,10 @@ function:
 ```
 Demo data download
 
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/untagged-591749e6e2f1267a3b1a/demo.fa) 
-
+click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
+```
+wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz
+```
 
 ### Assemble
 Run the command below to assemble mitochondrial and chloroplast genomes simultaneously.
