@@ -26,7 +26,7 @@ singularity image
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt.sif) to download singularity image
 ```
 singularity shell himt.sif
-himt assemble  -i demo.fa -o output
+himt assemble -i demo.fa -o output
 ```
 
 ## Installation under Windows
