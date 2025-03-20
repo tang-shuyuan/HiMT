@@ -16,6 +16,13 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
+docker
+```
+docker pull dacongmian/himt:1.0.7
+docker run -it dacongmian/himt:1.0.7
+himt -h
+```
+
 ## Installation under Windows
 
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) or visit the TBtools Plugin Store
