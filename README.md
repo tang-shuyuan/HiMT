@@ -16,7 +16,7 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
-docker
+docker image
 ```
 docker pull dacongmian/himt:1.0.7
 docker run -it dacongmian/himt:1.0.7
