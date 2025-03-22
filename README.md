@@ -30,7 +30,12 @@ himt assemble -i demo.fa -o output
 ```
 
 ## Installation on Windows
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) or visit the TBtools Plugin Store
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz)
+1 CMD
+you may use CMD to use HiMT
+
+2 visit the TBtools Plugin Store
+GUI
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
 
 
@@ -50,7 +55,6 @@ conda install shuyuan_tang::himt -c bioconda
     - miniprot >=0.13
     - plotly >=5.24.0
     - numpy >=1.26.0
-
 ```
 # Quickly start
 
@@ -129,7 +133,7 @@ Optional arguments:
 #### Examples
 
 
-1. run himt to assemble plant organelle genomes(HiMT support fa/fq/fa.gz/fq.gz)
+1. Run himt to assemble plant organelle genomes(HiMT support fa/fq/fa.gz/fq.gz)
 
 ```
 himt assemble -i demo.fa -o output -t 10
