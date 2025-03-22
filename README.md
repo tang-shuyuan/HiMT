@@ -49,12 +49,15 @@ Visit the TBtools Plugin Store
 
 
 ## Installation on MacOS
-Conda (recommended)
+### Conda (recommended)
 ```
 conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
+### Out-of-box
+download [MacOS aarch64](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_aarch64.tar.gz)
+download [MacOS x86](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_x86_64.tar.gz)
 ## Dependencies
 ```
     - python >=3.10
