@@ -30,13 +30,14 @@ himt assemble -i demo.fa -o output
 ```
 
 ## Installation on Windows
-1 Command Line
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) to download the HiMT Windows version
+1 Command Line  
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) to download the HiMT Windows version.  
 You can use HiMT via Windows Command Prompt (CMD) or PowerShell.
 ![image](https://github.com/user-attachments/assets/13d7ec50-77a2-42cb-a7c5-4bd1c130dd46)
 
-2 visit the TBtools Plugin Store
-GUI
+2 GUI
+visit the TBtools Plugin Store
+
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
 
 
