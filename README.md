@@ -22,8 +22,8 @@ docker pull dacongmian/himt:1.0.7
 docker run -it dacongmian/himt:1.0.7
 himt -h
 ```
-singularity image  
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt.sif) to download singularity image
+Singularity image  
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt.sif) to download singularity image
 ```
 singularity shell himt.sif
 himt assemble -i demo.fa -o output
