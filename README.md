@@ -9,7 +9,7 @@ HiMT is a rapid organelle genome assembly tool for HiFi data, which can be used 
 Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)  
 Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#)  
 For any question about HiMT, please contact 2421496996@qq.com
-## Installation under Linux
+## Installation on Linux
 conda (recommended)
 ```
 conda create -n himt
@@ -29,13 +29,13 @@ singularity shell himt.sif
 himt assemble -i demo.fa -o output
 ```
 
-## Installation under Windows
+## Installation on Windows
 
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) or visit the TBtools Plugin Store
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
 
 
-## Installation under MacOS
+## Installation on MacOS
 conda (recommended)
 ```
 conda create -n himt
