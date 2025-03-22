@@ -10,19 +10,19 @@ Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)
 Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#)  
 For any question about HiMT, please contact 2421496996@qq.com
 ## Installation on Linux
-Conda (recommended)
+### Conda (recommended)
 ```
 conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
-Docker image
+### Docker image
 ```
 docker pull dacongmian/himt:1.0.7
 docker run -it dacongmian/himt:1.0.7
 himt -h
 ```
-Singularity image  
+### Singularity image  
 Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt.sif) to download singularity image
 ```
 singularity shell himt.sif
@@ -30,11 +30,11 @@ himt assemble -i demo.fa -o output
 ```
 
 ## Installation on Windows
-1 Command Line  
+### Command Line  
 Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_windows.tar.gz) to download the HiMT Windows version.You can use HiMT via Windows Command Prompt (CMD) or PowerShell.
 ![image](https://github.com/user-attachments/assets/13d7ec50-77a2-42cb-a7c5-4bd1c130dd46)
 
-2 GUI  
+### GUI  
 visit the TBtools Plugin Store
 
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
