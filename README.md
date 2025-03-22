@@ -17,6 +17,11 @@ conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
 ### Docker image
+Click the the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_docker.tar.gz) to download docker image,then load it with:
+```
+docker load -i himt_docker tar.gz
+```
+Pull the HiMT docker image from Docker Hub
 ```
 docker pull dacongmian/himt:1.0.7
 docker run -it dacongmian/himt:1.0.7
