@@ -60,7 +60,7 @@ conda install shuyuan_tang::himt -c bioconda
 # Quickly start
 
 #### Introduction
-HiMT includes four subprograms
+Main feature panel
 ```
 usage: himt [function] [argument]
 
