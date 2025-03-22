@@ -56,8 +56,8 @@ conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
 ### Out-of-box
-download [MacOS aarch64](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_aarch64.tar.gz)
-download [MacOS x86](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_x86_64.tar.gz)
+download [MacOS aarch64](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_aarch64.tar.gz) version  
+download [MacOS x86](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_macos_x86_64.tar.gz) version
 ## Dependencies
 ```
     - python >=3.10
@@ -89,7 +89,7 @@ function:
       filter        Filter low-depth nuclear genome sequencing reads
       compare       Visualize the collinearity between two genomes
 ```
-Demo data download
+To download Demo data.
 
 click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
 ```
