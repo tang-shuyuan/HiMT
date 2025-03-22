@@ -16,6 +16,8 @@ conda create -n himt
 conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
+### Out-of-box
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_linux.tar.gz) to download the HiMT Linux version.
 ### Docker image
 Click the the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_docker.tar.gz) to download docker image,then load it with:
 ```
@@ -40,7 +42,7 @@ Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/h
 ![image](https://github.com/user-attachments/assets/13d7ec50-77a2-42cb-a7c5-4bd1c130dd46)
 
 ### GUI  
-visit the TBtools Plugin Store
+Visit the TBtools Plugin Store
 
 ![ede2b7ffa3fb94e9b1289ef3b8e7b15](https://github.com/user-attachments/assets/74817be5-3bbc-462b-90b4-009c4ca60c7f)
 
