@@ -89,9 +89,7 @@ function:
       filter        Filter low-depth nuclear genome sequencing reads
       compare       Visualize the collinearity between two genomes
 ```
-To download Demo data.
-
-click this [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
+To download the demo data, click [here](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa), or use the following command:
 ```
 wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa
 ```
