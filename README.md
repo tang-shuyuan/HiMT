@@ -91,7 +91,7 @@ function:
 ```
 To download Demo data.
 
-click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
+click this [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa) or
 ```
 wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa
 ```
