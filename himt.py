@@ -14,7 +14,7 @@ from compare import compare
 class Logger():
     def __init__(self, filename="log.txt"):
         self.terminal = sys.stdout
-        self.log = open(filename, "w", encoding='utf-8') 
+        self.log = open(filename, "w", encoding='utf-8')
     def write(self, message):
         self.log.write(message)
         self.terminal.write(message)
@@ -38,7 +38,7 @@ def main():
      """
 
     subparsers = parser.add_subparsers(title='function', description=function_description, metavar='')
-    parser_assemble = subparsers.add_parser('assemble', description="Assembling mitochondrail genome with HiFi\
+    parser_assemble = subparsers.add_parser('assemble', description="Assemblie mitochondrail genome with HiFi\
      sequcncing data ",usage="himt assemble [argument]"+"\n" + \
     "please use 'himt assemble -h or --help' to show help information",add_help=False)
 
@@ -50,7 +50,7 @@ def main():
                                 help='output directory.')
     optional_group=parser_assemble.add_argument_group('Optional arguments')
 
-    optional_group.add_argument('-h', '--help', action='help',default=argparse.SUPPRESS,
+    optional_group.add_argument('-h', '--help', action='help',
                                 help='Show this help message and exit')
     optional_group.add_argument('-n', '--head_number', type=int, default=4, \
                                 help='default=4,The number of kmer species randomly selected.')
@@ -82,7 +82,7 @@ def main():
 
     parser_assemble.set_defaults(func=assemble)
 
-    parser_filter = subparsers.add_parser('filter',description="Filtering the low-depth nuclear genome reads",\
+    parser_filter = subparsers.add_parser('filter',description="Filter the low-depth nuclear genome reads",\
     usage="himt filter [argument]"+"\n"+"please use 'himt filter -h or --help' to show help information",add_help=False)
     required_group = parser_filter.add_argument_group('Required arguments')
     required_group.add_argument('-i', '--input_file', required=True, \
@@ -91,7 +91,7 @@ def main():
                                 help='output directory.')
 
     optional_group = parser_filter.add_argument_group('Optional arguments')
-    optional_group.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+    optional_group.add_argument('-h', '--help', action='help',
                                 help='Show this help message and exit')
     optional_group.add_argument('-n', '--head_number', type=int, default=4, \
                                 help='default=4,The number of kmer species randomly selected.')
@@ -122,7 +122,7 @@ def main():
 
 
     parser_compare = subparsers.add_parser('compare', description= \
-        "compare the collinearity between two genomes based on alignment results from minimap2", \
+        "Visualize the collinearity between two genomes", \
         usage="himt compare [argument]" + "\n" + "please use 'himt compare -h or --help' to show help information",
         add_help=False)
     required_group = parser_compare.add_argument_group('Required arguments')
@@ -135,11 +135,11 @@ def main():
     genome you want to compare')
     # optional_group.add_argument('-f', '--filter',type=int, help='filter synteny block length less  \
     # than this value')
-    optional_group.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
+    optional_group.add_argument('-h', '--help', action='help',
                                 help='Show this help message and exit')
     parser_compare.set_defaults(func=compare)
 
-    parser_assess = subparsers.add_parser("assess",description="Assessing the assembly quality\
+    parser_assess = subparsers.add_parser("assess",description="Assess the assembly quality\
      of the mitochondrial genome",usage="himt assess [argument]"+
     "\n"+"please use 'himt assess -h or --help' to show help information")
     parser_assess.add_argument('-c','--category',default='mitochondrial',\
