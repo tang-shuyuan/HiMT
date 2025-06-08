@@ -8,7 +8,7 @@ HiMT is a rapid organelle genome assembly tool for HiFi data, which can be used 
 
 Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)  
 Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#) 
-Find detailed Chinese documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/aeg17o/ifmwlcuydrk3m35r)
+Find detailed Chinese documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/aeg17o/ifmwlcuydrk3m35r)  
 For any question about HiMT, please contact 2421496996@qq.com
 ## Installation on Linux
 ### Conda (recommended)
