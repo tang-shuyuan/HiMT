@@ -164,7 +164,7 @@ himt assemble -i input_file -o output_dir -s animal
 ```
 
 #### Main output files
-| file | description |
+| Files | Description |
 | --- | --- |
 | extract.fa |The filtered high-depth data can be directly used for mitochondrial genome assembly. |
 | himt_mitochondrial.gfa | Mitochondrial genome result file |
