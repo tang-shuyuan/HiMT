@@ -10,6 +10,7 @@ Find source codes and documentation at (https://github.com/tang-shuyuan/HiMT)
 Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#)   
 Find detailed Chinese documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/aeg17o/ifmwlcuydrk3m35r)  
 For any questions about HiMT, please contact 2421496996@qq.com 
+[Uploading HiMT（中文）.pdf…]()
 
 
 ## Installation on Linux
