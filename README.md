@@ -70,7 +70,7 @@ download [MacOS x86](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0
     - plotly >=5.24.0
     - numpy >=1.26.0
 ```
-# Quickly start
+# Quick start
 
 #### Introduction
 Main feature panel
