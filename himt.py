@@ -11,6 +11,7 @@ from assemble import assemble
 from assess import assess
 from compare import compare
 from refassemble import refassemble
+from view import view
 
 class Logger():
     def __init__(self, filename="log.txt"):
@@ -22,6 +23,7 @@ class Logger():
         self.log.flush()
     def flush(self):
         pass
+
 
 def main():
     version = get_versions()
@@ -37,6 +39,7 @@ def main():
     filter        Filter low-depth nuclear genome sequencing reads
     compare       Visualize the collinearity between two genomes
     refassemble   Reference-based extraction and assembly of reads
+    view          Visualize the graph of a GFA file
      """
 
     subparsers = parser.add_subparsers(title='function', description=function_description, metavar='')
@@ -89,7 +92,7 @@ def main():
                 mitochondrial genome depth to a value.If the input value exceeds the mitochondrial genome depth, \
                 retain the maximum mitochondrial genome depth,the default mitochondrial genome depth ranges between 15 and 50.\
                 input a value less than 0 (such as:-1) to retain the maximum mitogenome depth")
-
+    optional_group.add_argument('--__internal_seed', type=int, default=0, help=argparse.SUPPRESS)
 
     parser_assemble.set_defaults(func=assemble)
 
@@ -135,6 +138,9 @@ def main():
             input a value less than 0 (such as:-1) to retain the maximum mitogenome depth")
     optional_group.add_argument('-e', '--extract_parallel', type=int, default=2,
                                 help='default=2,The number of k-mers processed in parallel.')
+    optional_group.add_argument('--__internal_seed', type=int, default=0,help=argparse.SUPPRESS)
+
+
     parser_filter.set_defaults(func=filter)
 
 
@@ -172,6 +178,8 @@ def main():
     optional_group = parser_assess.add_argument_group('Optional arguments')
     optional_group.add_argument('-h', '--help', action='help',
                                 help='Show this help message and exit')
+    optional_group.add_argument("-s", "--species", default="plant", choices=["plant", "animal"],
+                                help="default=plant,Species category,only can be plant or animal.")
     optional_group.add_argument('-c', '--category', choices=['mitochondrial', 'chloroplast'],
                                 help='Choose the organelle type for analysis. \
                                 HiMT will automatically identify it if left unspecified.')
@@ -209,6 +217,44 @@ def main():
                                         If you don't want to use meta pattern, add this parameter.")
     parser_refassemble.set_defaults(func=refassemble)
 
+    parser_view = subparsers.add_parser(
+        'view',
+        description="Visualize the graph of a GFA file",
+        usage="himt view [argument]" + "\n" + "please use 'himt view -h or --help' to show help information",
+        add_help=False
+    )
+    required_group = parser_view.add_argument_group('Required arguments')
+    required_group.add_argument('-i', '--input_file', required=True, help='input a gfa file.')
+    required_group.add_argument('-o', '--output_dir', required=True, help='output directory.')
+
+    optional_group = parser_view.add_argument_group('Optional arguments')
+    optional_group.add_argument('-h', '--help', action='help',
+                                help='Show this help message and exit')
+    optional_group.add_argument('-f', '--image_format', default='svg', choices=['svg', 'png'],
+                                help='default=svg,output image format.')
+    optional_group.add_argument('-n', '--output_name', default='',
+                                help='output image name. By default, the input file name is used.')
+    optional_group.add_argument('-W', '--width', type=int, default=2200,
+                                help='default=2200,output image width.')
+    optional_group.add_argument('-H', '--height', type=int, default=1600,
+                                help='default=1600,output image height.')
+    optional_group.add_argument('--node_label', default='name-depth',
+                                choices=['none', 'name', 'depth', 'length', 'name-depth', 'name-length', 'name-depth-length'],
+                                help='default=name-depth,node label display mode.')
+    optional_group.add_argument('--edge_label', default='name', choices=['none', 'name', 'derived'],
+                                help='default=name,edge label display mode.')
+    optional_group.add_argument('--font_size', type=int,
+                                help='set node and edge label font size.')
+    optional_group.add_argument('--node_font_size', type=int,
+                                help='set node label font size.')
+    optional_group.add_argument('--edge_font_size', type=int,
+                                help='set edge label font size.')
+    optional_group.add_argument('--font_color',
+                                help='set label color, such as black or #000000.')
+    optional_group.add_argument('--seed', type=int,
+                                help='random seed for stable layout and colors.')
+    parser_view.set_defaults(func=view)
+
 
     args = parser.parse_args()
     if len(vars(args)) == 0:
@@ -218,6 +264,7 @@ def main():
     logger = Logger(os.path.join(args.output_dir, "HiMT.log"))
     sys.stdout = logger
     sys.stderr = logger
+    print("conda",version)
     print(f"({datetime.datetime.now()}) your running command: ", ' '.join(sys.argv))
     args.func(args)
 
