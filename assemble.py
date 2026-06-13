@@ -3,6 +3,7 @@
 import os
 import sys
 import datetime
+import subprocess
 from filter import filter
 from assess import assess
 
@@ -26,10 +27,19 @@ def simple_gfa(args):
         prot_sequence = os.path.join(config_path, "Arabidopsis_protein.fasta")
     out_blast_db = os.path.join(args.output_dir,"blast_output","temp_db")
     blast_result = os.path.join(args.output_dir, "blast_output","temp_blast_result")
-    command4 = f"makeblastdb -in {fa_file} -dbtype nucl -out {out_blast_db}"
-    os.system(command4)
-    command5 = f"tblastn -db {out_blast_db} -query {prot_sequence} -evalue 1e-10 -out {blast_result} -outfmt 6"
-    os.system(command5)
+
+    command4 = ["makeblastdb", "-in", fa_file, "-dbtype", "nucl", "-out", out_blast_db]
+    result4 = subprocess.run(command4, stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT, text=True, check=True)
+    if result4.stdout:
+        print(result4.stdout, end="")
+
+
+    command5 = ["tblastn", "-db", out_blast_db, "-query", prot_sequence, 
+                "-evalue", "1e-10", "-out", blast_result, "-outfmt", "6"]
+    subprocess.run(command5, stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT, text=True, check=True)
+
 
     with open(blast_result, "r") as f:
         mito_id = set()
@@ -87,8 +97,10 @@ def simple_gfa(args):
         ###split mitogenome and chloroplast genome
         if args.species=='plant' and args.func.__name__=="assemble":
             chr_blast_result = os.path.join(args.output_dir, "blast_output", "chr_blast_result")
-            command6 = f"tblastn -db {out_blast_db} -query {chr_pro_sequence} -evalue 1e-10 -out {chr_blast_result} -outfmt 6"
-            os.system(command6)
+            command6 = ["tblastn", "-db", out_blast_db, "-query", chr_pro_sequence, 
+                        "-evalue", "1e-10", "-out", chr_blast_result, "-outfmt", "6"]
+            subprocess.run(command6, stderr=subprocess.PIPE, text=True, check=True)
+
             chr_id = {}
             with open(chr_blast_result, 'r') as f_in:
                 for line in f_in:
@@ -264,15 +276,34 @@ def assemble(args):
 
     read_type_param={"HiFi":"--pacbio-hifi" , "ONT": "--nano-corr" , "CLR": "--pacbio-corr"}
 
+    extract_fa = os.path.join(args.output_dir, 'extract.fa')
+    flye_output = os.path.join(args.output_dir, 'flye_output')
+    
     if args.no_flye_meta:
-        os.system(f"flye {read_type_param[args.data_type]} {os.path.join(args.output_dir, 'extract.fa')} \
-            -o {os.path.join(args.output_dir, 'flye_output')} -t {args.thread}")
+        flye_cmd = ["flye", read_type_param[args.data_type], extract_fa, 
+                   "-o", flye_output, "-t", str(args.thread)]
     else:
-        os.system(f"flye {read_type_param[args.data_type]} {os.path.join(args.output_dir,'extract.fa')} \
-    -o {os.path.join(args.output_dir,'flye_output')} -t {args.thread} --meta")
+        flye_cmd = ["flye", read_type_param[args.data_type], extract_fa, 
+                   "-o", flye_output, "-t", str(args.thread), "--meta"]
 
+    p = subprocess.Popen(
+        flye_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1  # 行缓冲（对文本模式 + PIPE 生效）
+    )
 
-    simple_gfa(args)
+    # 实时读取输出
+    for line in p.stdout:
+        print(line, end="")
+
+    p.wait()
+    if file_exist(os.path.join(args.output_dir,"flye_output/assembly_graph.gfa")):
+        simple_gfa(args)
+    else:
+        print("The flye output file doesn't exist")
+        sys.exit(1)
 
     filter_seq_number,filter_seq_len,filter_min,filter_max,=\
     get_extract_file_info(os.path.join(args.output_dir, 'extract.fa'))
@@ -304,5 +335,17 @@ def assemble(args):
             args.input_file = os.path.join(args.output_dir, "himt_chloroplast.gfa")
             args.category='chloroplast'
             assess(args)
+
+    elif args.species=="animal":
+        args.table3_value = [total_seq_number, total_seq_len, total_min,
+                             int(round(total_seq_len // total_seq_number, 0)), \
+                             total_max, int(filter_mito_detph / reduction_radio), filter_seq_number, filter_seq_len, \
+                             filter_min, int(round(filter_seq_len // filter_seq_number, 0)), filter_max,
+                             filter_mito_detph]
+
+        args.input_file = os.path.join(args.output_dir, "himt_mitochondrial.gfa")
+        args.category="mitochondrial"
+        assess(args)
+
 
     get_hard_disk(args.output_dir)
