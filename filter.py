@@ -6,132 +6,44 @@ import datetime
 import random
 from multiprocessing import Pool
 import sys
-def process_input_file(input_file,output_dir):
+import subprocess
+
+def is_empty_file(path):
     try:
-        with gzip.open(input_file,'rb') as f_in:
-            first_item = f_in.read(1).decode('utf-8')
-            seq_number = 0
-            min_seq = float('inf')
-            max_seq = 0
-            sum_len = 0
-            if first_item == ">":
-                for i, line in enumerate(f_in):
-                    if i in {2, 4, 6, 8, 10}:
-                        item = line.decode("utf-8")[0]
-                        if item != ">":
-                            unstardan_format = True
-                            print(f"({datetime.datetime.now()}) Modifying the file format")
-                            break
-                        else:
-                            unstardan_format = False
-                    elif i == 11:
-                        break
-                if unstardan_format:
-                    f_in.seek(0)
-                    with open(os.path.join(output_dir, "process.fa"), "w") as f_w:
-                        f_w.write(f_in.readline().decode("utf-8"))
-                        seq_number += 1
-                        for line in f_in:
-                            line = line.decode("utf-8")
-                            if line.startswith(">"):
-                                f_w.write("\n" + line)
-                                seq_number += 1
-                            else:
-                                f_w.write(line.strip())
-                                max_seq = max(max_seq, len(line.strip()))
-                                min_seq = min(min_seq, len(line.strip()))
-                                sum_len += len(line.strip())
-                else:
-                    f_in.seek(0)
-                    with open(os.path.join(output_dir, "process.fa"), "w") as f_out:
-                        for line in f_in:
-                            line = line.decode("utf-8")
-                            if line.startswith(">"):
-                                f_out.write(line)
-                                seq_number += 1
-                            else:
-                                f_out.write(line)
-                                max_seq = max(max_seq, len(line.strip()))
-                                min_seq = min(min_seq, len(line.strip()))
-                                sum_len += len(line.strip())
-            elif first_item == '@':
-                print(f"({datetime.datetime.now()}) converting fq to fa")
-                with open(os.path.join(output_dir, "process.fa"), 'w') as f_out:
-                    f_in.seek(0)
-                    for i, line in enumerate(f_in):
-                        line = line.decode("utf-8")
-                        if i % 4 == 0:
-                            f_out.write(">" + line[1:])
-                            seq_number += 1
-                        elif i % 4 == 1:
-                            f_out.write(line)
-                            max_seq = max(max_seq, len(line.strip()))
-                            min_seq = min(min_seq, len(line.strip()))
-                            sum_len += len(line.strip())
-            else:
-                print("file type unknow")
-                sys.exit()
-            return seq_number, sum_len, min_seq, max_seq, os.path.join(output_dir, "process.fa")
+        return os.path.exists(path) and os.path.getsize(path)== 0
     except OSError:
-        with open(input_file, 'r') as f_in:
-            first_item = f_in.read(1)
-            seq_number = 0
-            min_seq = float('inf')
-            max_seq = 0
-            sum_len = 0
-            if first_item == ">":
-                for i, line in enumerate(f_in):
-                    if i in {2, 4, 6, 8, 10}:
-                        item = line[0]
-                        if item != ">":
-                            unstardan_format = True
-                            print(f"({datetime.datetime.now()}) Modifying the file format.")
-                            break
-                        else:
-                            unstardan_format = False
-                    elif i == 11:
-                        break
-                if unstardan_format:
-                    f_in.seek(0)
-                    with open(os.path.join(output_dir, "process.fa"), "w") as f_w:
-                        f_w.write(f_in.readline())
-                        seq_number += 1
-                        for line in f_in:
-                            if line.startswith(">"):
-                                f_w.write("\n" + line)
-                                seq_number += 1
-                            else:
-                                f_w.write(line.strip())
-                                max_seq = max(max_seq, len(line.strip()))
-                                min_seq = min(min_seq, len(line.strip()))
-                                sum_len += len(line.strip())
-                else:
-                    f_in.seek(0)
-                    for line in f_in:
-                        if line.startswith(">"):
-                            seq_number += 1
-                        else:
-                            max_seq = max(max_seq, len(line.strip()))
-                            min_seq = min(min_seq, len(line.strip()))
-                            sum_len += len(line.strip())
-                    return seq_number, sum_len, min_seq, max_seq, input_file
-            elif first_item == '@':
-                print(f"({datetime.datetime.now()}) converting fq to fa")
-                with open(os.path.join(output_dir, "process.fa"), 'w') as f_out:
-                    f_in.seek(0)
-                    for i, line in enumerate(f_in):
-                        if i % 4 == 0:
-                            f_out.write(">" + line[1:])
-                            seq_number += 1
-                        elif i % 4 == 1:
-                            f_out.write(line)
-                            max_seq = max(max_seq, len(line.strip()))
-                            min_seq = min(min_seq, len(line.strip()))
-                            sum_len += len(line.strip())
-            else:
-                print("file type unknow")
-                sys.exit()
-            return seq_number, sum_len, min_seq, max_seq, os.path.join(output_dir, "process.fa")
+        return None
+
+def read_file_by_chunk(path, chunk_size=1024*1024*8, encoding="utf-8"):
+    def _iter_chunks(f):
+        carry = ""
+        while True:
+            chunk = f.read(chunk_size)
+            if not chunk:
+                break
+            text = carry + chunk
+            lines = text.split('\n')
+            carry = lines.pop()
+            if lines:
+                yield '\n'.join(lines) + '\n'
+        if carry:
+            yield carry
+    try:
+        with gzip.open(path, 'rt', encoding=encoding) as f:
+            yield from _iter_chunks(f)
+    except (OSError, gzip.BadGzipFile):
+        with open(path, 'r', encoding=encoding) as f:
+            yield from _iter_chunks(f)
+
+def open_input_text(path):
+    try:
+        f = gzip.open(path, "rt", encoding="utf-8", errors="replace", newline="")
+        f.read(1)      # 触发解压校验
+        f.seek(0)
+        return f
+    except (OSError, gzip.BadGzipFile):
+        f = open(path, "rt", encoding="utf-8", errors="replace", newline="")
+        return f
 
 def generate_header(n):
     Base = ["A", "T", "G", "C"]
@@ -144,6 +56,103 @@ def generate_header(n):
                 header.append(i + j)
         return header
 
+def process_input_file(input_file,output_dir):
+    seq_number = 0
+    min_seq = float('inf')
+    max_seq = 0
+    sum_len = 0
+    f_in = open_input_text(input_file)
+
+    first_char = f_in.read(1)
+    f_in.seek(0)
+    if first_char == ">":  # FASTA
+        unstardan_format = False
+        for i, line in enumerate(f_in):
+            if i in {2, 4, 6, 8, 10}:
+                if not line.startswith(">"):
+                    unstardan_format = True
+                    print(f"({datetime.datetime.now()}) Modifying the file format")
+                    break
+            elif i == 11:
+                break
+        if unstardan_format:
+            with open(os.path.join(output_dir,"process.fa"), "w",buffering=1024*1024*8) as f_w:
+                current_seq_id = ""
+                current_seq = ""
+                for chunk in read_file_by_chunk(input_file):
+                    for line in chunk.splitlines():
+                        if not line:
+                            continue
+                        if line.startswith('>'):
+                            if current_seq_id and current_seq:
+                                seq_len = len(current_seq)
+                                seq_number += 1
+                                sum_len += seq_len
+                                max_seq = max(max_seq, seq_len)
+                                min_seq = min(min_seq, seq_len)
+                                f_w.write(f"{current_seq_id}\n")
+                                f_w.write(f"{current_seq}\n")
+                                current_seq = ""
+                            current_seq_id = line
+                        else:
+                            current_seq += line
+                if current_seq_id and current_seq:
+                    seq_len = len(current_seq)
+                    seq_number += 1
+                    sum_len += seq_len
+                    max_seq = max(max_seq, seq_len)
+                    min_seq = min(min_seq, seq_len)
+                    f_w.write(f"{current_seq_id}\n")
+                    f_w.write(f"{current_seq}\n")
+
+            f_in.close()
+            return seq_number, sum_len, min_seq, max_seq, os.path.join(output_dir,"process.fa")
+
+        else:
+            for chunk in read_file_by_chunk(input_file):
+                for line in chunk.splitlines():
+                    if not line:
+                        continue
+                    if line.startswith(">"):
+                        seq_number += 1
+                    else:
+                        max_seq = max(max_seq, len(line.strip()))
+                        min_seq = min(min_seq, len(line.strip()))
+                        sum_len += len(line.strip())
+            f_in.close()
+            return seq_number, sum_len, min_seq, max_seq, input_file
+
+    elif first_char == '@':
+        with open(os.path.join(output_dir, "process.fa"), "w", buffering=1024 * 1024 * 8) as f_w:
+            state=0
+            print(f"({datetime.datetime.now()}) converting fq to fa")
+            for chunk in read_file_by_chunk(input_file):
+                for line in chunk.splitlines():
+                    if not line:
+                        continue
+                    if state == 0:
+                        if not line.startswith("@"):
+                            raise ValueError(f"Wrong fastq format: {line}")
+                        f_w.write(f'>{line[1:]}\n')
+                        state = 1
+                    elif state == 1:
+                        seq_number += 1
+                        sum_len += len(line.strip())
+                        max_seq = max(max_seq, len(line.strip()))
+                        min_seq = min(min_seq, len(line.strip()))
+                        f_w.write(f'{line}\n')
+                        state = 2
+                    elif state == 2:
+                        state=3
+                    elif state == 3:
+                        state=0
+        f_in.close()
+        return seq_number, sum_len, min_seq, max_seq, os.path.join(output_dir, "process.fa")
+    else:
+        print("file type unknow")
+        f_in.close()
+        sys.exit()
+
 def determining_mitogenome_depth(args,process_file):
     config_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "config_database")
     os.makedirs(os.path.join(args.output_dir, "blast_output"), exist_ok=True)
@@ -152,7 +161,6 @@ def determining_mitogenome_depth(args,process_file):
         prot_sequence = os.path.join(config_path, "Drosophila_gunungcola_CM045947.fasta")
     else:
         prot_sequence = os.path.join(config_path, "Arabidopsis_protein.fasta")
-
     if args.data_type == "HiFi":
         e_value="1e-10"
     else:
@@ -161,11 +169,23 @@ def determining_mitogenome_depth(args,process_file):
     out_blast_db = os.path.join(args.output_dir, "blast_output","database")
     blast_result = os.path.join(args.output_dir,"blast_output","blast_result")
 
-    command1 = f"makeblastdb -in {process_file} -dbtype nucl -out {out_blast_db}"
-    os.system(command1)
-    command2 = f"tblastn -num_descriptions 100000 -num_alignments 100 -num_threads {args.thread}\
-       -db {out_blast_db} -query {prot_sequence} -evalue {e_value} -out {blast_result}"
-    os.system(command2)
+    command1 = ["makeblastdb", "-in", process_file, "-dbtype", "nucl", "-out", out_blast_db]
+    result1=subprocess.run(command1,stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                       text=True,check=True)
+    if result1.stdout:
+        print(result1.stdout, end="")
+
+    command2 = ["tblastn", "-num_descriptions","100000", "-num_alignments","100", "-num_threads",str(args.thread),\
+       "-db", out_blast_db, "-query" ,prot_sequence, "-evalue", e_value, "-out", blast_result]
+    subprocess.run(command2,text=True,check=True)
+
+    if is_empty_file(blast_result):
+        print("blast_result is an empty file. Please ensure your file is in standard FASTA or FASTQ format.")
+        sys.exit()
+    elif is_empty_file(blast_result) is None:
+        print("Couldn't find file blast_result")
+        sys.exit()
+
     mitochondrial_depth = {}
     with open(blast_result, "r") as f:
         for i, line in enumerate(f):
@@ -197,10 +217,15 @@ def determining_mitogenome_depth(args,process_file):
         print("Check that you have entered the correct species category")
         sys.exit()
     return min_reads_depth
+
 def process_header(head, threthold,file,kmer_length):
     dic = {}
-    with open(file, 'r') as f_in:
-        for i, line in enumerate(f_in):
+    i=-1
+    for chunk in read_file_by_chunk(file):
+        for line in chunk.splitlines():
+            i+=1
+            if not line:
+                continue
             if i % 2 == 1:
                 start = 0
                 while True:
@@ -221,54 +246,35 @@ def process_header(head, threthold,file,kmer_length):
     del dic
     return high_frequency_kmer
 
-def get_porportion(input,line_number,proportion,output_dir):
-    with open(input, "r") as f:
-        base_line = list(range(1, line_number, 2))
-        select_line = set(random.sample(base_line, int(len(base_line) * proportion)))
-        f.seek(0)
-        with open(os.path.join(output_dir, "proportion.fa"), "w") as f_w:
-            for i, line in enumerate(f):
-                if i + 1 in select_line or i in select_line:
-                    f_w.write(line)
+def get_porportion(path,line_number,proportion,output_dir):
+    base_line = list(range(1, line_number, 2))
+    select_line = set(random.sample(base_line, int(len(base_line) * proportion)))
+    line_id=-1
+    with open(os.path.join(output_dir, "proportion.fa"), "w", buffering=1024 * 1024 * 8) as f_w:
+        for chunk in read_file_by_chunk(path):
+            for line in chunk.splitlines():
+                line_id += 1
+                if line_id+1 in select_line or line_id in select_line:
+                    f_w.write(f"{line}\n")
     return os.path.join(output_dir, "proportion.fa")
 
-
-
-def obtain_extract_file(in_file,output_dir,header,high_depth_kmer,kmer_length,accuracy):
-    with open(in_file, "r") as f:
-        with open(os.path.join(output_dir, "extract.fa"), "w") as w:
-            for i, line in enumerate(f):
-                if i % 2 == 0:
-                    id_line = line
-                elif i % 2 == 1:
-                    if len(line.strip()) > kmer_length:
-                        kmers = set()
-                        for head in header:
-                            start = 0
-                            while True:
-                                start = line.strip().find(head, start)
-                                if start == -1 or start + kmer_length > len(line.strip()):
-                                    break
-                                kmer = line.strip()[start:start + kmer_length]
-                                start += 1
-                                kmers.add(kmer)
-                        if len(kmers) > 0 and len(kmers & high_depth_kmer) / len(kmers) >= accuracy:
-                            w.write(id_line)
-                            w.write(line)
-
-def add_obtain_extract_file(in_file,output_dir,header,high_depth_kmer,kmer_length,accuracy,proportion):
-    with open(in_file, "r") as f:
-        line_number = sum(1 for line in f)
-        base_line = list(range(1, line_number, 2))
-        select_line = set(random.sample(base_line, int(len(base_line) * proportion)))
-        f.seek(0)
-        with open(os.path.join(output_dir, "extract.fa"), "w") as w:
-            for i, line in enumerate(f):
-                if i + 1 in select_line or i in select_line:
-                    if i % 2 == 0:
+def obtain_extract_file(args,in_file,proportion,header,high_depth_kmer):
+    with open(os.path.join(args.output_dir, "extract.fa"), "w",buffering=1024*1024*8) as w:
+        base_line_number = 0
+        for chunk in read_file_by_chunk(in_file):
+            for line in chunk.splitlines():
+                if line and line.startswith(">"):
+                    base_line_number += 1
+        line_id=-1
+        need_line =set(random.sample(list(range(1, base_line_number*2, 2)),int(base_line_number*proportion)))
+        for chunk in read_file_by_chunk(in_file):
+            for line in chunk.splitlines():
+                line_id += 1
+                if line_id + 1 in need_line or line_id  in need_line:
+                    if line_id % 2 == 0:
                         id_line = line
-                    elif i % 2 == 1:
-                        if len(line.strip()) > kmer_length:
+                    elif line_id % 2 == 1:
+                        if len(line.strip()) > args.kmer_length:
                             kmers = set()
                             # for j in range(len(line.strip()) - kmer_length + 1):
                             #     kmer = line.strip()[j:j + kmer_length]
@@ -278,20 +284,24 @@ def add_obtain_extract_file(in_file,output_dir,header,high_depth_kmer,kmer_lengt
                                 start = 0
                                 while True:
                                     start = line.strip().find(head, start)
-                                    if start == -1 or start + kmer_length > len(line.strip()):
+                                    if start == -1 or start + args.kmer_length > len(line.strip()):
                                         break
-                                    kmer = line.strip()[start:start + kmer_length]
+                                    kmer = line.strip()[start:start + args.kmer_length]
                                     start += 1
                                     kmers.add(kmer)
-                            if len(kmers) > 0 and len(kmers & high_depth_kmer) / len(kmers) >= accuracy:
-                                w.write(id_line)
-                                w.write(line)
+                            if len(kmers) > 0 and len(kmers & high_depth_kmer) / len(kmers) >= args.accuracy:
+                                w.write(f"{id_line}\n")
+                                w.write(f"{line}\n")
     print(f"({datetime.datetime.now()}) complete extracting")
 
 def filter(args):
-    output_dir=args.output_dir
-    kmer_length = args.kmer_length
     print(f"({datetime.datetime.now()}) processing file")
+    if args.__internal_seed:
+        random_seed = args.__internal_seed
+    else:
+        random_seed = random.randint(1, 64)
+
+    print(f"({datetime.datetime.now()}) random seed {random_seed}")
 
     if args.proportion >1 or args.proportion<0:
         print("The value of --proportion must be 0-1")
@@ -299,21 +309,25 @@ def filter(args):
     if args.accuracy > 1 or args.accuracy < 0:
         print("The value of --accuracy must be 0-1")
         sys.exit()
-    seq_number, sum_len, min_seq, max_seq, process_file = process_input_file(args.input_file, output_dir)
+    seq_number, sum_len, min_seq, max_seq, process_file = process_input_file(args.input_file, args.output_dir)
+
     if args.base_number == 3:
         if args.head_number < 1 or args.head_number > 64:
             print("if base number is 3,head number only can be between 1 to 64 ")
             sys.exit()
+
     elif args.base_number == 4:
         if args.head_number == 4:
             args.head_number = 16
         if args.head_number < 1 or args.head_number > 256:
             print("if base number is 4,head number only can be be tween 1 to 256")
             sys.exit()
+
     if args.base_number == 3 and args.head_number == 4:
         header = {x + y for x, y in zip(generate_header(1), random.sample(generate_header(2), 4))}
     else:
         header = set(random.sample(generate_header(args.base_number), args.head_number))
+
     print(f"({datetime.datetime.now()}) random head {header}")
 
     high_depth_kmer = set()
@@ -321,13 +335,12 @@ def filter(args):
         if args.proportion ==1:
             proportion_file=process_file
         else:
-            proportion_file = get_porportion(process_file,seq_number*2,args.proportion,output_dir)
+            proportion_file = get_porportion(process_file,seq_number*2,args.proportion,args.output_dir)
 
         if args.filter_depth:
             if args.normalize_depth:
                 print("you have manually input an filter threshold ,cann't normalize mitogemome depth")
                 sys.exit()
-
             else:
                 min_reads_depth = args.filter_depth
                 with Pool(processes=args.extract_parallel) as pool:
@@ -335,7 +348,8 @@ def filter(args):
                                            [(h, min_reads_depth, proportion_file,args.kmer_length) for h in header])
                 for result in results:
                     high_depth_kmer.update(result)
-                obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy)
+
+                obtain_extract_file(args,proportion_file,1,header,high_depth_kmer)
             reduction_radio=args.proportion
         else:
             min_reads_depth=determining_mitogenome_depth(args,proportion_file)
@@ -349,11 +363,11 @@ def filter(args):
             if args.normalize_depth :
                 if args.normalize_depth >min_reads_depth or args.normalize_depth<0:
                     print("retain the maximum mitogenome depth")
-                    obtain_extract_file(proportion_file, output_dir, header, high_depth_kmer, kmer_length,args.accuracy)
+                    obtain_extract_file(args,proportion_file,1,header,high_depth_kmer)
                     reduction_radio = args.proportion
                 else:
                     n=args.normalize_depth/min_reads_depth
-                    add_obtain_extract_file(proportion_file, output_dir, header, high_depth_kmer, kmer_length,args.accuracy,n)
+                    obtain_extract_file(args,proportion_file,n,header,high_depth_kmer)
                     reduction_radio = args.proportion*n
 
             else:
@@ -366,8 +380,8 @@ def filter(args):
                 else:
                     n = 30 / min_reads_depth
 
-                add_obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy,n)
-                reduction_radio = args.proportion*n
+                obtain_extract_file(args,proportion_file,n,header,high_depth_kmer)
+                reduction_radio = args.proportion * n
 
     ###auto subsample
     else:
@@ -391,11 +405,11 @@ def filter(args):
                 [(h, min_reads_depth * args.filter_percentage, process_file,args.kmer_length) for h in header])
             for result in results:
                 high_depth_kmer.update(result)
-            obtain_extract_file(process_file, output_dir, header, high_depth_kmer, kmer_length, args.accuracy)
+            obtain_extract_file(args,process_file,1,header,high_depth_kmer)
             return seq_number, sum_len, min_seq, max_seq, 1
 
         if auto_proportion !=1:
-            proportion_file = get_porportion(process_file,seq_number*2,auto_proportion,output_dir)
+            proportion_file = get_porportion(process_file,seq_number*2,auto_proportion,args.output_dir)
             print(f"({datetime.datetime.now()}) your file size is {file_size} GB,\
 Automatically reduce the data set to {auto_proportion} times of its original size.")
         else:
@@ -417,7 +431,7 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
                     [(h, min_reads_depth * args.filter_percentage,proportion_file,args.kmer_length) for h in header])
                 for result in results:
                     high_depth_kmer.update(result)
-                obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy)
+                obtain_extract_file(args,proportion_file,1,header,high_depth_kmer)
                 reduction_radio = auto_proportion
             else:
                 if args.normalize_depth < min_reads_depth:
@@ -427,12 +441,12 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
                     for result in results:
                         high_depth_kmer.update(result)
                     n=args.normalize_depth/min_reads_depth
-                    add_obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy,n)
+                    obtain_extract_file(args,proportion_file,n,header,high_depth_kmer)
                     reduction_radio = auto_proportion*n
                 else:
                     if args.normalize_depth < estimate_mitogenome_depth:
                         n = args.normalize_depth * auto_proportion / min_reads_depth
-                        proportion_file = get_porportion(process_file, seq_number * 2, n, output_dir)
+                        proportion_file = get_porportion(process_file, seq_number * 2, n, args.output_dir)
                         reduction_radio = n
                     else:
                         proportion_file=process_file
@@ -446,7 +460,7 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
                         [(h, min_reads_depth * args.filter_percentage,proportion_file,args.kmer_length) for h in header])
                     for result in results:
                         high_depth_kmer.update(result)
-                    obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy)
+                    obtain_extract_file(args,proportion_file,1,header,high_depth_kmer)
 
             return seq_number, sum_len, min_seq, max_seq,reduction_radio
 
@@ -459,7 +473,7 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
                 temp_reduction_radio = 1
             else:
                 n= 120 *auto_proportion /min_reads_depth
-                proportion_file = get_porportion(process_file, seq_number * 2, n, output_dir)
+                proportion_file = get_porportion(process_file, seq_number * 2, n, args.output_dir)
                 min_reads_depth=determining_mitogenome_depth(args,proportion_file)
                 temp_reduction_radio = n
         with Pool(processes=args.extract_parallel) as pool:
@@ -476,6 +490,6 @@ Automatically reduce the data set to {auto_proportion} times of its original siz
             n = 0.1
         else:
             n = 30 / min_reads_depth
-        add_obtain_extract_file(proportion_file,output_dir,header,high_depth_kmer,kmer_length,args.accuracy,n)
+        obtain_extract_file(args, proportion_file, n, header, high_depth_kmer)
         reduction_radio = temp_reduction_radio * n
     return seq_number, sum_len, min_seq, max_seq,reduction_radio
