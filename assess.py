@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import json
 import os
 import sys
 import random
+import argparse
 import plotly.graph_objects as go
+# import plotly.io as pio
 import numpy as np
 import base64
 import copy
+from pathlib import Path
+from view import build_render_options, validate_args, run as render_gfa_view
 def precision_to_json(fig, precision=2):
     for trace in fig.data:
         if hasattr(trace, "x") and isinstance(trace.x, (list, np.ndarray)):
@@ -14,6 +19,21 @@ def precision_to_json(fig, precision=2):
         if hasattr(trace, "y") and isinstance(trace.y, (list, np.ndarray)):
             trace.y = np.round(trace.y, precision).tolist()
     return fig.to_json()
+
+def fig_to_json(fig,name="himt"):
+    config_dict = {
+        'toImageButtonOptions': {
+            'format': 'svg',
+            'filename': f'{name}',
+            'scale': 1
+        }
+    }
+    json_str = fig.to_json()
+    data_dict = json.loads(json_str)
+    data_dict['config'] = config_dict
+    full_json = json.dumps(data_dict)
+    return full_json
+
 def return_content(file):
     with open(file,'r',encoding='utf-8') as f:
         content=f.read()
@@ -116,6 +136,199 @@ def random_choice_color():
     return color
 def intersection(region1, region2):
     return max(region1[0], region2[0]) < min(region1[1], region2[1])
+
+
+def render_local_gfa_svg(input_file, output_file):
+    render_args = argparse.Namespace(
+        width=1600,
+        height=1200,
+        node_label="name-depth-length",
+        edge_label="name",
+        font_size=None,
+        node_font_size=16,
+        edge_font_size=12,
+        font_color=None,
+        seed=1,
+    )
+    validate_args(render_args)
+    options = build_render_options(render_args)
+    render_gfa_view(Path(input_file).expanduser().resolve(),
+                    Path(output_file).expanduser().resolve(),
+                    render_args.width,
+                    render_args.height,
+                    options,
+                    render_args.seed)
+
+
+def write_simple_animal_mito_report(args, process):
+    os.makedirs(os.path.join(args.output_dir, "bandage_graph"), exist_ok=True)
+    bandage_svg = os.path.join(args.output_dir, "bandage_graph", "mitochondrial_bandage.svg")
+    render_local_gfa_svg(args.input_file, bandage_svg)
+    with open(bandage_svg, "rb") as f:
+        bandage_image = base64.b64encode(f.read()).decode("utf-8")
+
+    sum_len = 0
+    n50 = 0
+    for contig_len in process.contig_length:
+        sum_len += contig_len
+        if sum_len >= process.sum_len / 2:
+            n50 = contig_len
+            break
+
+    circular_contig = process.draw_sequence_connection(go.Figure()) if process.gfa else "No information"
+    gc_content = round(sum(process.contig_GC_number) / process.sum_len, 4) if process.sum_len else 0
+    depth_values = [x for x in process.contig_depth if x is not None]
+    mean_depth = round(sum(depth_values) / len(depth_values), 2) if depth_values else "No information"
+
+    basic_rows = [
+        ("Category", "animal mitochondrial"),
+        ("Input type", "gfa" if process.gfa else "fasta"),
+        ("Total length", process.sum_len),
+        ("Total contig number", len(process.contig_name)),
+        ("Number of closed circular contigs", circular_contig),
+        ("Total GC content", gc_content),
+        ("N count", process.N_number),
+        ("Minimum length", min(process.contig_length) if process.contig_length else 0),
+        ("Maximum length", max(process.contig_length) if process.contig_length else 0),
+        ("N50", n50),
+        ("Mean depth", mean_depth),
+    ]
+
+    contig_headers = ["Index", "Contig name", "GC content", "Length"]
+    contig_values = [
+        list(range(1, len(process.contig_name) + 1)),
+        process.contig_name,
+        [round(process.contig_GC_number[i] / process.contig_length[i], 4) if process.contig_length[i] else 0 for i in range(len(process.contig_name))],
+        process.contig_length,
+    ]
+    if process.gfa and len(process.contig_name) == len(process.contig_depth):
+        contig_headers.append("Depth")
+        contig_values.append(process.contig_depth)
+
+    basic_table = go.Figure()
+    basic_table.add_trace(go.Table(
+        header=dict(values=["Animal mitochondrial basic information", "Value"],
+                    fill_color='rgba(49,124,183, 0.3)', line_color='black'),
+        cells=dict(values=[[row[0] for row in basic_rows], [row[1] for row in basic_rows]],
+                   fill_color='rgba(255, 255,255, 0)', line_color='black')
+    ))
+    basic_table.update_layout(height=320, width=820, paper_bgcolor='rgba(255, 255,255,0)',
+                              margin=dict(l=1, t=1, b=1), font=dict(family="Arial", color="black"))
+
+    contig_table = go.Figure()
+    contig_table.add_trace(go.Table(
+        header=dict(values=contig_headers, fill_color='rgba(49,124,183, 0.3)', line_color='black'),
+        cells=dict(values=contig_values, fill_color='rgba(255, 255,255, 0)', line_color='black')
+    ))
+    contig_table.update_layout(height=220, width=820, paper_bgcolor='rgba(255, 255,255,0)',
+                               margin=dict(l=1, t=1, b=1), font=dict(family="Arial", color="black"))
+
+    plotly_content = return_content(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "config_database", "Plotly.js"))
+    with open(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "config_database", "himt_logo.svg"), 'rb') as image_file:
+        logo_image = base64.b64encode(image_file.read()).decode("utf-8")
+
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>HiMT animal mitochondrial report</title>
+        <script>{plotly_content}</script>
+        <style>
+            body {{
+                font-family: 'Segoe UI', Arial, sans-serif;
+                line-height: 1.6;
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f9f9f9;
+            }}
+            .header {{
+                width: 100vw;
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 20px 0;
+                background: rgb(151, 25, 23);
+                margin-bottom: 20px;
+                box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            }}
+            .header-content {{
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 0 20px;
+                justify-content: center;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }}
+            .section {{
+                background: white;
+                padding: 25px;
+                border-radius: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                margin-bottom: 25px;
+            }}
+            .chart-container {{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 0 0 10px 0;
+                border: 1px solid #e0e0e0;
+                border-radius: 6px;
+            }}
+            .figure-caption {{
+                font-size: 0.9em;
+                color: #666;
+                text-align: center;
+                margin-top: 10px;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="header-content">
+                <img src="data:image/svg+xml;base64,{logo_image}" alt="Toolkit Logo" style="width: 180px; height: auto;">
+                <div style="flex: 1;">
+                    <h1 style="margin: 0 0 20px 0;font-size:40px;font-family: Arial,sans-serif">
+                        <a href="https://github.com/tang-shuyuan/HiMT" style="text-decoration: none;color:white;" target="_blank">HiMT</a>
+                    </h1>
+                    <p style="margin: 0; line-height: 1.6;font-size: 20px;color:white">
+                        Simplified assessment report for animal mitochondrial assemblies
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>The animal mitochondrial genome assembly graph</h2>
+            <div class="chart-container">
+                <img src="data:image/svg+xml;base64,{bandage_image}" alt="Assembly Graph" style="width: 760px; height: auto;">
+            </div>
+            <p class="figure-caption">Visualization of the input GFA assembly graph.</p>
+        </div>
+
+        <div class="section">
+            <h2>Basic information</h2>
+            <div class="chart-container" style="padding: 20px 0"><div id="table1-chart"></div></div>
+        </div>
+
+        <div class="section">
+            <h2>Contig information</h2>
+            <div class="chart-container" style="padding: 20px 0"><div id="table2-chart"></div></div>
+        </div>
+
+        <script>
+            var tableLayout1 = {fig_to_json(basic_table, name="animal_mito_basic")};
+            Plotly.newPlot('table1-chart', tableLayout1.data, tableLayout1.layout, tableLayout1.config);
+            var tableLayout2 = {fig_to_json(contig_table, name="animal_mito_contigs")};
+            Plotly.newPlot('table2-chart', tableLayout2.data, tableLayout2.layout, tableLayout2.config);
+        </script>
+    </body>
+    </html>"""
+
+    with open(os.path.join(args.output_dir, f"himt_mitochondrial.html"), "w", encoding="utf-8") as f:
+        f.write(html_content)
 
 
 class info:
@@ -456,13 +669,13 @@ class info:
             spin_angel = content[3]
             gap_angel=np.pi/120
             if gene_center - temp_position > gap_angel:
-                fig.add_annotation(x=x2, y=y2, text=gene_name, showarrow=False, font=dict(size=10, color='black'),
+                fig.add_annotation(x=x2, y=y2, text=gene_name, showarrow=False, font=dict(size=12, color='black',family="Arial"),
                                    textangle=spin_angel)
                 temp_position = gene_center
             else:
                 x2 = content[2] * np.cos(temp_position + gap_angel)
                 y2 = content[2] * np.sin(temp_position + gap_angel)
-                fig.add_annotation(x=x2, y=y2, text=gene_name, showarrow=False, font=dict(size=10, color='black'),
+                fig.add_annotation(x=x2, y=y2, text=gene_name, showarrow=False, font=dict(size=12, color='black',family="Arial"),
                                    textangle=spin_angel)
                 temp_position = temp_position + gap_angel
         for index, name in enumerate(self.contig_name):
@@ -505,7 +718,7 @@ class info:
 
 
             fig.add_annotation(x=x[50], y=y[50], text=txet, showarrow=False,
-                                font=dict(size=8, color='black'), textangle=-angel_deg)
+                                font=dict(size=12, color='black'), textangle=-angel_deg)
 
 
     ###draw GC content
@@ -531,7 +744,7 @@ class info:
                 x1 = np.cos(radian) * (r1 + (r2-r1) * GC_content)
                 y1 = np.sin(radian) * (r1+ (r2-r1) * GC_content)
                 fig.add_trace(go.Scatter(x=[x, x1], y=[y, y1], mode='lines', name=GC_content, hoverinfo='name',
-                                         line=dict(color="rgba(151, 25, 23,0.8)", width=2)))
+                                         line=dict(color="rgba(151, 25, 23,0.8)", width=1)))
             draw_circos_ring(fig, start, end, r1, r2, name)
 
 
@@ -551,7 +764,7 @@ class info:
                 uniform_numbers = np.linspace(r1, r1+length, 100)
 
                 for item in uniform_numbers:
-                    draw_line(fig, start, end, item, depth, width=2, color=color)
+                    draw_line(fig, start, end, item, depth, width=1, color=color)
 
                 # theta = np.linspace(start, end, int((end - start) / display * 1500 + 5))
                 # x = np.cos(theta) * r1
@@ -578,17 +791,17 @@ class info:
 
     def add_annotation(self, fig):
         fig.add_annotation(x=0, y=460, showarrow=False, xanchor='left', yanchor='middle',
-                           font=dict(size=16, color='black'),
+                           font=dict(size=16, color='black',family="Arial"),
                            text='① Sequence ID')
 
         fig.add_annotation(x=0, y=585, showarrow=False, xanchor='left', yanchor='middle',
-                           font=dict(size=16, color='black'),
+                           font=dict(size=16, color='black',family="Arial"),
                            text='② GC content')
         fig.add_annotation(x=0, y=725, showarrow=False, xanchor='left', yanchor='middle',
-                           font=dict(size=16, color='black'),
+                           font=dict(size=16, color='black',family="Arial"),
                            text='③ Depth')
         fig.add_annotation(x=0, y=1000, showarrow=False, xanchor='left', yanchor='middle',
-                           font=dict(size=16, color='black'),
+                           font=dict(size=16, color='black',family="Arial"),
                            text='④ Conserved genes')
         # fig.add_annotation(x=400, y=300, showarrow=False, xanchor='left', yanchor='middle',
         #                    font=dict(size=12, color='black'),
@@ -646,6 +859,9 @@ def assess(args):
         args.category = auto_judge_category(args)
     process = info(args)
     process.int()
+    if getattr(args, "species", "plant") == "animal" :
+        write_simple_animal_mito_report(args, process)
+        return
     process.run_out_program()
     fig1 = go.Figure()
     fig2 = go.Figure()
@@ -673,7 +889,7 @@ def assess(args):
                     showarrow=False,
                     xref='x',
                     yref='y',
-                    font=dict(color='black'),
+                    font=dict(color='black',family="Arial"),
                 )
     fig1.update_layout(
         width=550,
@@ -681,12 +897,12 @@ def assess(args):
         showlegend=False,
         plot_bgcolor='rgba(255, 255,255,0)',
         paper_bgcolor='rgba(255, 255,255,0)',
-        font=dict(family="Arial"),
-        xaxis=dict(title_font=dict(size=16, color='black'),
+        font=dict(family="Arial",color="black"),
+        xaxis=dict(title_font=dict(size=16, color='black',family="Arial"),
                    showgrid=False,
                    zeroline=False,
                    ),
-        yaxis=dict(title_font=dict(size=16, color='black'), title_text='Conserved protein coding genes',
+        yaxis=dict(title_font=dict(size=16, color='black',family="Arial"), title_text='Conserved protein coding genes',
                    showgrid=False,
                    zeroline=False),
         coloraxis1=dict(colorscale=colorscale,
@@ -694,7 +910,7 @@ def assess(args):
                             len=0.25,
                             x=1.05,
                             y=0.8,
-                            title=dict(text="Gene integrity", side="right", font=dict(size=16, color='black')),
+                            title=dict(text="Gene integrity", side="right", font=dict(family="Arial",size=16, color='black')),
                         )),
         shapes=[
             dict(
@@ -706,14 +922,17 @@ def assess(args):
         ]
     )
 
+
+
+
     ##draw circos
     process.draw_chromosome(fig2,420,480)
     process.draw_GC_content(fig2,550,620)
     process.draw_contig_depth(fig2,690,760)
 
     #### draw gene
-    process.draw_gene(fig2, po_info, po_cds, 1000, 20, 'red')
-    process.draw_gene(fig2, ne_info, ne_cds, 1000, -20, 'rgb(13,168,236)')
+    process.draw_gene(fig2, po_info, po_cds, 1000, 25, 'red')
+    process.draw_gene(fig2, ne_info, ne_cds, 1000, -25, 'rgb(13,168,236)')
     ###add annotation information
     process.add_annotation(fig2)
 
@@ -731,7 +950,7 @@ def assess(args):
         showlegend=False,
         plot_bgcolor='rgba(255, 255,255,0)',
         paper_bgcolor='rgba(255, 255,255,0)',
-        # font=dict(family="Arial"),
+        font=dict(family="Arial"),
         xaxis=dict(title_text=None, range=[-1150, 1150],
                    showgrid=False, scaleanchor='y',
                    showticklabels=False,
@@ -759,7 +978,8 @@ def assess(args):
                                           fill_color='rgba(49,124,183, 0.3)', line_color='black'),
                               cells=dict(values=[information, value], fill_color='rgba(255, 255,255, 0)',
                                          line_color='black')))
-    table1.update_layout(height=200,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1))
+    table1.update_layout(height=200,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1),
+                         font=dict(family="Arial", color="black"))
 
     # table_html = pio.to_html(table1, full_html=False)
     ###draw table 2
@@ -780,7 +1000,8 @@ def assess(args):
     table2 = go.Figure()
     table2.add_trace(go.Table(header=dict(values=header, fill_color='rgba(49,124,183, 0.3)', line_color='black')
                               , cells=dict(values=information, fill_color='rgba(255, 255,255, 0)', line_color='black')))
-    table2.update_layout(height=200,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1))
+    table2.update_layout(height=200,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1),
+                         font=dict(family="Arial", color="black"))
 
     plotly_content=return_content(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "config_database",
                                 "Plotly.js"))
@@ -790,10 +1011,11 @@ def assess(args):
 
     ### Obtain bandage figure
     os.makedirs(os.path.join(args.output_dir, "bandage_graph"), exist_ok=True)
-    bandage =os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), "config_database","Bandage")
-    os.system(f"{bandage} image {args.input_file} {os.path.join(args.output_dir,'bandage_graph',f'{args.category}_bandage.svg')} \
-    --height 200 --width 300 --depth --names --fontsize 4 --lengths")
-    with open(os.path.join(args.output_dir,'bandage_graph',f'{args.category}_bandage.svg'),'rb') as f:
+    bandage_svg = os.path.join(args.output_dir, 'bandage_graph', f'{args.category}_bandage.svg')
+    render_local_gfa_svg(args.input_file, bandage_svg)
+
+
+    with open(bandage_svg,'rb') as f:
         bandage_image=base64.b64encode(f.read()).decode("utf-8")
 
     html_content = f"""
@@ -910,16 +1132,16 @@ def assess(args):
 
             <script>
 
-                var layout1 = {fig1.to_json()};
-                Plotly.newPlot('figure1', layout1.data, layout1.layout);
-                var layout2 = {fig2.to_json()};
-                Plotly.newPlot('figure2', layout2.data, layout2.layout);
+                var layout1 = {fig_to_json(fig1)};
+                Plotly.newPlot('figure1', layout1.data, layout1.layout,layout1.config);
+                var layout2 = {fig_to_json(fig2)};
+                Plotly.newPlot('figure2', layout2.data, layout2.layout,layout2.config);
                 //table1
-                var tableLayout = {table1.to_json()};
-                Plotly.newPlot('table1-chart', tableLayout.data, tableLayout.layout);
+                var tableLayout = {fig_to_json(table1)};
+                Plotly.newPlot('table1-chart', tableLayout.data, tableLayout.layout,tableLayout.config);
                 //table2
-                 var tableLayout = {table2.to_json()};
-                Plotly.newPlot('table2-chart', tableLayout.data, tableLayout.layout);      
+                 var tableLayout = {fig_to_json(table2)};
+                Plotly.newPlot('table2-chart', tableLayout.data, tableLayout.layout,tableLayout.config);      
             </script>
         </body>
         </html>"""
@@ -936,7 +1158,8 @@ def assess(args):
                 go.Table(header=dict(values=["Data statistics information", "value"],
                                      fill_color='rgba(49,124,183, 0.3)', line_color='black'),
                          cells=dict(values=information, fill_color='rgba(255, 255,255, 0)', line_color='black'))])
-            table3.update_layout(height=300,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1))
+            table3.update_layout(height=300,width=800, paper_bgcolor='rgba(255, 255,255,0)', margin=dict(l=1, t=1, b=1),
+                                 font=dict(family="Arial", color="black"))
             add = f"""
             <html>
             <body>
@@ -945,8 +1168,8 @@ def assess(args):
              <div class="chart-container"  style="padding: 20px 0"><div id="table3-chart"></div></div>
             </div>
             <script>
-            var tableLayout = {table3.to_json()};
-            Plotly.newPlot('table3-chart', tableLayout.data, tableLayout.layout);      
+            var tableLayout = {fig_to_json(table3)};
+            Plotly.newPlot('table3-chart', tableLayout.data, tableLayout.layout,tableLayout.config);      
             </script>
             </body>
             </html>"""
