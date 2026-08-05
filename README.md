@@ -44,13 +44,17 @@ himt -h
 
 ## Installation on Windows
 ### Command Line  
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.9/himt_windows.zip) to download the HiMT Windows version.You can use HiMT via Windows Command Prompt (CMD) or PowerShell.
-![image](https://github.com/user-attachments/assets/2f647c08-2515-44a2-b071-39b459d086c7)
+
+### GUI
+
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt-windows-gui-exe.zip) to download the HiMT Windows version.Extract and click HiMT.exe.
+<img width="541" height="185" alt="image" src="https://github.com/user-attachments/assets/9f0bd1d4-0251-4f48-9dc6-01937b5388ba" />
 
 
-### GUI  
-Visit the TBtools Plugin Store or our download website:
-https://tbtools.cowtransfer.com/s/32eec252c44d4d to get TBtools plugins.
+
+
+### TBtools Plugin
+Visit the TBtools Plugin Store to get TBtools plugins.
 You can also click the provided [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.9/HiMT_Toolkit.v1.5.plugin) to download the TBtools plugin directly.
 
 
