@@ -92,23 +92,22 @@ download [MacOS x86](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0
 #### Introduction
 Main feature panel
 ```
-usage: himt [function] [argument]
-
-An Integrative Toolkit for Assembling Organelle Genomes
-version 1.0.9
+An Integrative Toolkit for Assembling Organelle Genomes                                               
+version 1.1.4                                                                                         
 For any questions, please submit them via https://github.com/tang-shuyuan/HiMT or https://bioanno.com.
-
-options:
-  -h, --help     show this help message and exit
-  -v, --version  show program's version number and exit
-
+                                                                                                      
+options:                                                                                              
+  -h, --help     show this help message and exit                                                      
+  -v, --version  show program's version number and exit                                               
+                      
 function:
-
-      assemble      Assemble mitochondrial genome with HiFi data
+  
+      assemble      Assemble mitochondrial genome with HiFi data 
       assess        Assess the assembly quality of the mitochondrial genome
       filter        Filter low-depth nuclear genome sequencing reads
       compare       Visualize the collinearity between two genomes
       refassemble   Reference-based extraction and assembly of reads
+      view          Visualize the graph of a GFA file
 ```
 To download the demo data, click [here](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa), or use the following command:
 ```
@@ -118,10 +117,32 @@ wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa
 ### Assemble
 Run the command below to assemble mitochondrial and chloroplast genomes simultaneously.
 ```
+usage: himt [function] [argument]                                                                     
+                                                                                                      
+An Integrative Toolkit for Assembling Organelle Genomes                                               
+version 1.1.4                                                                                         
+For any questions, please submit them via https://github.com/tang-shuyuan/HiMT or https://bioanno.com.
+                                                                                                      
+options:                                                                                              
+  -h, --help     show this help message and exit                                                      
+  -v, --version  show program's version number and exit                                               
+                      
+function:
+  
+      assemble      Assemble mitochondrial genome with HiFi data 
+      assess        Assess the assembly quality of the mitochondrial genome
+      filter        Filter low-depth nuclear genome sequencing reads
+      compare       Visualize the collinearity between two genomes
+      refassemble   Reference-based extraction and assembly of reads
+      view          Visualize the graph of a GFA file
+       
+
+  
+(bio) user023@Master:~/aquilegia_hhs/sra$ himt assemble -h
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
 
-Assembling mitochondrail genome with HiFi sequcncing data
+Assemblie mitochondrail genome with HiFi sequcncing data
 
 Required arguments:
   -i INPUT_FILE, --input_file INPUT_FILE
@@ -131,33 +152,40 @@ Required arguments:
 
 Optional arguments:
   -h, --help            Show this help message and exit
+  -s {plant,animal}, --species {plant,animal}
+                        default=plant,Species category,only can be plant or animal.
+  -d {HiFi,CLR,ONT}, --data_type {HiFi,CLR,ONT}
+                        default=HiFi,Choose your sequencing data type (HiFi,CLR or ONT)
+  -k KMER_LENGTH, --kmer_length KMER_LENGTH
+                        default=21 for HiFi, 15 for CLR/ONT
   -n HEAD_NUMBER, --head_number HEAD_NUMBER
                         default=4,The number of kmer species randomly selected.
   -t THREAD, --thread THREAD
-                        default=2 The number of thread used during code execution.
+                        default=2 The number of threads used for flye assembly.
+  -e EXTRACT_PARALLEL, --extract_parallel EXTRACT_PARALLEL
+                        default=2,The number of k-mers processed in parallel.
   -b {3,4}, --base_number {3,4}
                         default=3,only can be 3 and 4,The number of bases at the beginning of kmer.
   -fd FILTER_DEPTH, --filter_depth FILTER_DEPTH
-                        read depths below this value will be filtered. You must input the -p parameter to enable the
-                        use of the -fd parameter
+                        Read depths below this value will be filtered. You must input the -p
+                        parameter to enable the use of the -fd parameter
   -fp FILTER_PERCENTAGE, --filter_percentage FILTER_PERCENTAGE
-                        default=0.3,The depth of the mitochondrial genome obtained by blast, the proportion adjusted
-                        downwards on this value.
+                        default=0.3,The depth of the mitochondrial genome obtained by blast, the
+                        proportion adjusted downwards on this value.
   -p PROPORTION, --proportion PROPORTION
-                        default=1,The percentage of the selected dataset from the entire file, choose a value from
-                        0-1.
+                        default=0,The percentage of the selected dataset from the entire file, choose
+                        a value from 0-1.
   -c ACCURACY, --accuracy ACCURACY
-                        default=0.8,If one read has a high-frequency kmer ratio exceeding this value, it will be
-                        considered as a high-frequency read,choose a value from 0-1.
-  -s {plant,animal}, --species {plant,animal}
-                        default=plant,Species category,only can be plant or animal.
-  --no_flye_meta        By default, we use flye Meta pattern to assemble the mitochondrial genome. If you don't want
-                        to use meta pattern, add this parameter.
+                        default=0.8,choose a value between 0 and 1 .If a read’s ratio of high-
+                        frequency k-mers exceeds the threshold , it will be classified as a high-
+                        frequency read.
+  --no_flye_meta        By default, we use flye Meta pattern to assemble the mitochondrial genome. If
+                        you don't want to use meta pattern, add this parameter.
   -x NORMALIZE_DEPTH, --normalize_depth NORMALIZE_DEPTH
-                        Normalize the mitochondrial genome depth to a value.If the input value exceeds the
-                        mitochondrial genome depth, retain the maximum mitochondrial genome depth,the default
-                        mitochondrial genome depth ranges between 15 and 50. input a value less than 0 (such as:-1) to
-                        retain the maximum mitogenome depth
+                        Normalize the mitochondrial genome depth to a value.If the input value
+                        exceeds the mitochondrial genome depth, retain the maximum mitochondrial
+                        genome depth,the default mitochondrial genome depth ranges between 15 and 50.
+                        input a value less than 0 (such as:-1) to retain the maximum mitogenome depth
 ```
 
 #### Examples
@@ -181,10 +209,8 @@ himt assemble -i hifi.fa -o output_dir -b 4
 ```
 ##### 2 Assemble plant organelle genomes using ONT/CLR data.
 ```
-##For uncorrected ONT or CLR data (parameters may require multiple attempts)：
-himt assemble -i input.fa -o output_dir -d ONT/CLR -c 0.3
+##For ONT or CLR data, add the -d flag to declare the data type.
 
-##For corrected ONT/CLR data (quality ≥ Q20):
 himt assemble -i input.fa -o output_dir -d ONT/CLR
 
 ##When encountering insufficient memory on Windows:
