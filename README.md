@@ -11,7 +11,8 @@ Find detailed documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/tonqgq?#
 Find detailed Chinese documentation at (https://www.yuque.com/yuqueyonghuwrgkbo/aeg17o/ifmwlcuydrk3m35r)  
 For any questions about HiMT, please contact 2421496996@qq.com    
 ### How to cite?   
-If you use HiMT, please cite:Tang, S., Liang, Y., Wu, F., Wu, Y., Li, J., Lin, L., Feng, J., Luan, A., Wang, Y., Xu, C., Wang, J., Zhou, Y., Xia, R., Liao, Y., & Chen, C. (2025). HiMT: An Integrative Toolkit for Assembling Organelle Genomes Using HiFi Reads. Plant communications.
+If you use HiMT, please cite:  
+Tang, S., Liang, Y., Wu, F., Wu, Y., Li, J., Lin, L., Feng, J., Luan, A., Wang, Y., Xu, C., Wang, J., Zhou, Y., Xia, R., Liao, Y., & Chen, C. (2025). HiMT: An Integrative Toolkit for Assembling Organelle Genomes Using HiFi Reads. Plant communications.
 
 ## Installation on Linux
 ### Conda (recommended)
@@ -21,7 +22,8 @@ conda activate himt
 conda install shuyuan_tang::himt -c bioconda
 ```
 ### Out-of-box
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_linux.tar.gz) to download the HiMT Linux version.
+
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt_linux_protable.tar.gz) to download the HiMT Linux version.
 ### Docker image
 Click the the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_docker.tar.gz) to download docker image,then load it with:
 ```
