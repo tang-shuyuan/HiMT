@@ -31,8 +31,8 @@ docker load -i himt_docker.tar.gz
 ```
 Pull the HiMT docker image from Docker Hub
 ```
-docker pull dacongmian/himt:1.0.9
-docker run -it dacongmian/himt:1.0.9
+docker pull dacongmian/himt:1.1.4
+docker run -it dacongmian/himt:1.1.4
 himt -h
 ```
 ### Singularity image  
