@@ -23,9 +23,9 @@ conda install shuyuan_tang::himt -c bioconda
 ```
 ### Out-of-box
 
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt_linux_protable.tar.gz) to download the HiMT Linux version.
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt_linux_out_of_box_1.1.4.tar.gz) to download the HiMT Linux version.
 ### Docker image
-Click the the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt_docker.tar.gz) to download docker image,then load it with:
+Click the the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt_1.1.4_docker.tar) to download docker image,then load it with:
 ```
 docker load -i himt_docker.tar.gz
 ```
@@ -36,7 +36,7 @@ docker run -it dacongmian/himt:1.1.4
 himt -h
 ```
 ### Singularity image  
-Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/himt.sif) to download singularity image
+Click the [link](https://github.com/tang-shuyuan/HiMT/releases/download/v1.1.4/himt_1.1.4.sif) to download singularity image
 ```
 singularity shell himt.sif
 himt -h
