@@ -120,7 +120,7 @@ Run the command below to assemble mitochondrial and chloroplast genomes simultan
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
 
-Assemblie mitochondrail genome with HiFi sequcncing data
+Assemble mitochondrail genome with HiFi sequcncing data
 
 Required arguments:
   -i INPUT_FILE, --input_file INPUT_FILE
