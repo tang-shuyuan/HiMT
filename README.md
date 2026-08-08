@@ -117,28 +117,6 @@ wget https://github.com/tang-shuyuan/HiMT/releases/download/v1.0.7/demo.fa
 ### Assemble
 Run the command below to assemble mitochondrial and chloroplast genomes simultaneously.
 ```
-usage: himt [function] [argument]                                                                     
-                                                                                                      
-An Integrative Toolkit for Assembling Organelle Genomes                                               
-version 1.1.4                                                                                         
-For any questions, please submit them via https://github.com/tang-shuyuan/HiMT or https://bioanno.com.
-                                                                                                      
-options:                                                                                              
-  -h, --help     show this help message and exit                                                      
-  -v, --version  show program's version number and exit                                               
-                      
-function:
-  
-      assemble      Assemble mitochondrial genome with HiFi data 
-      assess        Assess the assembly quality of the mitochondrial genome
-      filter        Filter low-depth nuclear genome sequencing reads
-      compare       Visualize the collinearity between two genomes
-      refassemble   Reference-based extraction and assembly of reads
-      view          Visualize the graph of a GFA file
-       
-
-  
-(bio) user023@Master:~/aquilegia_hhs/sra$ himt assemble -h
 usage: himt assemble [argument]
 please use 'himt assemble -h or --help' to show help information
 
